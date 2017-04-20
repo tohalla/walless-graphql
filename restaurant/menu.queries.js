@@ -1,7 +1,7 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {menuItemFragment} from 'graphql/restaurant/menuItem.queries';
+import {menuItemFragment} from './menuItem.queries';
 
 const menuFragment = gql`
   fragment menuInfo on Menu {

@@ -5,11 +5,11 @@ import {hasIn} from 'lodash/fp';
 import {
   formatMenuItem,
   menuItemFragment
-} from 'graphql/restaurant/menuItem.queries';
+} from './menuItem.queries';
 import {
   menuFragment
-} from 'graphql/restaurant/menu.queries';
-import {fileFragment} from 'graphql/file.queries';
+} from './menu.queries';
+import {fileFragment} from '../file.queries';
 
 const restaurantFragment = gql`
   fragment restaurantInfo on Restaurant {
