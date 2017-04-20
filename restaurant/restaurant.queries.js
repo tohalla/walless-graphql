@@ -2,7 +2,6 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {hasIn} from 'lodash/fp';
 
-import authenticationHandler from 'util/auth';
 import {
   formatMenuItem,
   menuItemFragment
@@ -110,7 +109,6 @@ const getAccountsByRestaurant = graphql(
       }
     }
   `, {
-    skip: ownProps => !authenticationHandler.isAuthenticated,
     options: ownProps => ({
       variables: {
         id: ownProps.restaurant.id

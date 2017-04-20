@@ -1,7 +1,6 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import authenticationHandler from 'util/auth';
 import {restaurantFragment} from 'graphql/restaurant/restaurant.queries';
 
 const accountFragment = gql`
@@ -55,7 +54,6 @@ const getActiveAccount = graphql(
     ${restaurantFragment}
   `,
   {
-    skip: () => !authenticationHandler.isAuthenticated,
     props: ({ownProps, data: {getActiveAccount: account, ...rest}}) => {
       return {
         getActiveAccount: {account, data: rest}
