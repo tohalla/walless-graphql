@@ -7,6 +7,7 @@ import {
   menuItemFragment
 } from './menuItem.queries';
 import {
+  formatMenu,
   menuFragment
 } from './menu.queries';
 import {fileFragment} from '../file.queries';
@@ -196,7 +197,7 @@ const getMenusByRestaurant = graphql(
       }
       return {getMenusByRestaurant: {
         menus: restaurantById.menusByRestaurant.edges
-          .map(edge => edge.node),
+          .map(edge => formatMenu(edge.node)),
         data: rest
       }};
     }
