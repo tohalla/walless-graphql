@@ -10,6 +10,7 @@ import {
   formatMenu,
   menuFragment
 } from './menu.queries';
+import {servingLocationFragment} from './servingLocation.queries';
 import {fileFragment} from '../file.queries';
 
 const restaurantFragment = gql`
@@ -204,6 +205,46 @@ const getMenusByRestaurant = graphql(
   }
 );
 
+const getServingLocationsByRestaurant = graphql(
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        id
+        servingLocationsByRestaurant {
+          edges {
+            node {
+              ...servingLocationInfo
+            }
+          }
+        }
+      }
+    }
+    ${servingLocationFragment}
+  `, {
+    options: ownProps => ({
+      variables: {
+        id: ownProps.restaurant.id
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...rest} = data;
+      if (!hasIn(
+        [
+          'servingLocationsByRestaurant',
+          'edges'
+        ])(restaurantById)
+      ) {
+        return {data: rest};
+      }
+      return {getServingLocationsByRestaurant: {
+        servingLocations: restaurantById.servingLocationsByRestaurant.edges
+          .map(edge => edge.node),
+        data: rest
+      }};
+    }
+  }
+);
+
 const getFilesForRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
@@ -249,5 +290,6 @@ export {
   getAccountsByRestaurant,
   getMenusByRestaurant,
   getAccountRolesForRestaurant,
+  getServingLocationsByRestaurant,
   getFilesForRestaurant
 };
