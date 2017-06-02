@@ -1,14 +1,14 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-const servingLocationFragment = gql(`
+const servingLocationFragment = gql`
   fragment servingLocationInfo on ServingLocation {
     id
     name
     enabled
     createdAt
   }
-`);
+`;
 
 const getServingLocation = graphql(
   gql`
