@@ -7,6 +7,7 @@ const servingLocationFragment = gql`
     name
     enabled
     createdAt
+    restaurant
   }
 `;
 
