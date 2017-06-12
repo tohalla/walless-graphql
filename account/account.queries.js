@@ -1,7 +1,7 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {restaurantFragment} from '../restaurant/restaurant.queries';
+import {restaurantFragment} from 'walless-graphql/restaurant/restaurant.queries';
 
 const accountFragment = gql`
   fragment accountInformation on Account {

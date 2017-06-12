@@ -1,7 +1,7 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {restaurantFragment} from './restaurant.queries';
+import {restaurantFragment} from 'walless-graphql/restaurant/restaurant.queries';
 
 const createRestaurant = graphql(
   gql`

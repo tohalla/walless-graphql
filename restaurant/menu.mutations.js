@@ -2,7 +2,7 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {menuFragment} from './menu.queries';
+import {menuFragment} from 'walless-graphql/menu.queries';
 
 const createMenu = graphql(
   gql`

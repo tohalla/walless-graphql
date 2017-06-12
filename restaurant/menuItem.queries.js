@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import {hasIn} from 'lodash/fp';
 import gql from 'graphql-tag';
 
-import {fileFragment} from '../file.queries';
+import {fileFragment} from 'walless-graphql/file.queries';
 
 const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {

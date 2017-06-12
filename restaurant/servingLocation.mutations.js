@@ -2,7 +2,7 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {servingLocationFragment} from './servingLocation.queries';
+import {servingLocationFragment} from 'walless-graphql/servingLocation.queries';
 
 const createServingLocation = graphql(
   gql`

@@ -5,13 +5,13 @@ import {hasIn} from 'lodash/fp';
 import {
 	formatMenuItem,
 	menuItemFragment
-} from './menuItem.queries';
+} from 'walless-graphql/restaurant/menuItem.queries';
 import {
 	formatMenu,
 	menuFragment
-} from './menu.queries';
-import {servingLocationFragment} from './servingLocation.queries';
-import {fileFragment} from '../file.queries';
+} from 'walless-graphql/restaurant/menu.queries';
+import {servingLocationFragment} from 'walless-graphql/restaurant/servingLocation.queries';
+import {fileFragment} from 'walless-graphql/file.queries';
 
 const restaurantFragment = gql`
 	fragment restaurantInfo on Restaurant {
