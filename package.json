@@ -1,0 +1,9 @@
+{
+  "name": "walless-graphql",
+  "private": true,
+  "dependencies": {
+    "graphql-tag": "^2.2.2",
+    "lodash": "^4.17.4",
+    "react-apollo": "^1.4.2"
+  }
+}
