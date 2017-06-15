@@ -1,5 +1,4 @@
 import {graphql} from 'react-apollo';
-import {hasIn} from 'lodash/fp';
 import gql from 'graphql-tag';
 
 import {fileFragment} from 'walless-graphql/file.queries';
@@ -7,13 +6,18 @@ import {fileFragment} from 'walless-graphql/file.queries';
 const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {
     id
-    name
-    description
     restaurant
     createdAt
     createdBy
     category
     type
+    menuItemInformationsByMenuItem {
+      nodes {
+        language
+        name
+        description
+      }
+    }
     menuItemFilesByMenuItem {
       edges {
         node {
@@ -28,13 +32,22 @@ const menuItemFragment = gql`
 `;
 
 const formatMenuItem = (menuItem = {}) => {
-  const {menuItemFilesByMenuItem, ...rest} = menuItem;
-  let files = [];
-  if (hasIn(['menuItemFilesByMenuItem', 'edges'])(menuItem)) {
-    files = menuItemFilesByMenuItem.edges
-      .map(edge => edge.node.fileByFile);
-  }
-  return Object.assign({}, rest, {files});
+  const {
+    menuItemFilesByMenuItem = {},
+    menuItemInformationsByMenuItem = {},
+    ...rest
+  } = menuItem;
+  const files = Array.isArray(menuItemFilesByMenuItem.edges) ?
+    menuItemFilesByMenuItem.edges.map(edge => edge.node.fileByFile) : [];
+  const information = Array.isArray(menuItemInformationsByMenuItem.nodes) ?
+    menuItemInformationsByMenuItem.nodes.reduce(
+      (prev, val) => {
+        const {language, ...restInformation} = val;
+        return Object.assign({}, prev, {[language]: restInformation});
+      },
+      {}
+    ) : [];
+  return Object.assign({}, rest, {files, information});
 };
 
 const getMenuItem = graphql(

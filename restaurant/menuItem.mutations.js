@@ -47,6 +47,62 @@ const updateMenuItem = graphql(
   }
 );
 
+const createMenuItemInformation = graphql(
+  gql`
+  mutation createMenuItemInformation($input: CreateMenuItemInformationInput!) {
+    createMenuItemInformation(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      createMenuItemInformation: (menuItemInformationItems: Object[] | Object) => {
+        (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
+          .forEach(menuItemInformation =>
+            mutate({
+              variables: {
+                input: {menuItemInformation}
+              }
+            })
+          );
+      }
+    })
+  }
+);
+
+const updateMenuItemInformation = graphql(
+  gql`
+  mutation updateMenuItemInformation($input: UpdateMenuItemInformationByLanguageAndMenuInput!) {
+    updateMenuItemInformationByLanguageAndMenu(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      updateMenuItemInformation: (menuItemInformationItems: Object[] | Object) => {
+        (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
+          .forEach(menuItemInformation => {
+            const {
+              menu_item,
+              language,
+              __typename, // eslint-disable-line
+              ...information
+            } = menuItemInformation;
+            mutate({
+              variables: {
+                input: {
+                  menu_item,
+                  language,
+                  menuItemInformationPatch: information
+                }
+              }
+            });
+          });
+      }
+    })
+  }
+);
+
 const updateMenuItemFiles = graphql(
   gql`
   mutation updateMenuItemFiles($input: UpdateMenuItemFilesInput!) {
@@ -65,4 +121,10 @@ const updateMenuItemFiles = graphql(
   }
 );
 
-export {createMenuItem, updateMenuItem, updateMenuItemFiles};
+export {
+  createMenuItem,
+  updateMenuItem,
+  updateMenuItemFiles,
+  createMenuItemInformation,
+  updateMenuItemInformation
+};
