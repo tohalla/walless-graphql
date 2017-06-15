@@ -45,6 +45,62 @@ const updateMenu = graphql(
   }
 );
 
+const createMenuInformation = graphql(
+  gql`
+  mutation createMenuInformation($input: CreateMenuInformationInput!) {
+    createMenuInformation(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      createMenuInformation: (menuInformationItems: Object[] | Object) => {
+        (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
+          .forEach(menuInformation =>
+            mutate({
+              variables: {
+                input: {menuInformation}
+              }
+            })
+          );
+      }
+    })
+  }
+);
+
+const updateMenuInformation = graphql(
+  gql`
+  mutation updateMenuInformation($input: UpdateMenuInformationByLanguageAndMenuInput!) {
+    updateMenuInformationByLanguageAndMenu(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      updateMenuInformation: (menuInformationItems: Object[] | Object) => {
+        (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
+          .forEach(menuInformation => {
+            const {
+              menu,
+              language,
+              __typename, // eslint-disable-line
+              ...information
+            } = menuInformation;
+            mutate({
+              variables: {
+                input: {
+                  menu,
+                  language,
+                  menuInformationPatch: information
+                }
+              }
+            });
+          });
+      }
+    })
+  }
+);
+
 const updateMenuItems = graphql(
   gql`
   mutation updateMenuItems($input: UpdateMenuItemsInput!) {
@@ -63,4 +119,10 @@ const updateMenuItems = graphql(
   }
 );
 
-export {createMenu, updateMenu, updateMenuItems};
+export {
+  createMenu,
+  updateMenu,
+  updateMenuItems,
+  createMenuInformation,
+  updateMenuInformation
+};

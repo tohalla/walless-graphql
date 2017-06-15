@@ -1,14 +1,18 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {hasIn} from 'lodash/fp';
 
 import {menuItemFragment} from 'walless-graphql/restaurant/menuItem.queries';
 
 const menuFragment = gql`
   fragment menuInfo on Menu {
     id
-    name
-    description
+    menuInformationsByMenu {
+      nodes {
+        language
+        name
+        description
+      }
+    }
     menuMenuItemsByMenu {
       edges {
         node {
@@ -23,13 +27,22 @@ const menuFragment = gql`
 `;
 
 const formatMenu = (menu = {}) => {
-  const {menuMenuItemsByMenu, ...rest} = menu;
-  let menuItems = [];
-  if (hasIn(['menuMenuItemsByMenu', 'edges'])(menu)) {
-    menuItems = menuMenuItemsByMenu.edges
-      .map(edge => edge.node.menuItemByMenuItem);
-  }
-  return Object.assign({}, rest, {menuItems});
+  const {
+    menuMenuItemsByMenu = {},
+    menuInformationsByMenu = {},
+    ...rest
+  } = menu;
+  const menuItems = Array.isArray(menuMenuItemsByMenu.edges) ?
+    menuMenuItemsByMenu.edges.map(edge => edge.node.menuItemByMenuItem) : [];
+  const information = Array.isArray(menuInformationsByMenu.nodes) ?
+    menuInformationsByMenu.nodes.reduce(
+      (prev, val) => {
+        const {language, ...restInformation} = val;
+        return Object.assign({}, prev, {[language]: restInformation});
+      },
+      {}
+    ) : [];
+  return Object.assign({}, rest, {menuItems, information});
 };
 
 const getMenu = graphql(
