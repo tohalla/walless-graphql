@@ -8,10 +8,12 @@ import {
 
 const accountFragment = gql`
   fragment accountInformation on Account {
+    nodeId
     id
     firstName
     lastName
     emailByEmail {
+      nodeId
       id
       email
     }

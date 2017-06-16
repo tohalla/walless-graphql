@@ -6,6 +6,7 @@ import {fileFragment} from 'walless-graphql/file.queries';
 const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {
     id
+    nodeId
     restaurant
     createdAt
     createdBy
@@ -13,6 +14,7 @@ const menuItemFragment = gql`
     type
     menuItemInformationsByMenuItem {
       nodes {
+        nodeId
         language
         name
         description

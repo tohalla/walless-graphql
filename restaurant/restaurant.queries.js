@@ -16,6 +16,7 @@ import {fileFragment} from 'walless-graphql/file.queries';
 const restaurantFragment = gql`
 	fragment restaurantInfo on Restaurant {
 		id
+    nodeId
 		createdBy
     restaurantInformationsByRestaurant {
       nodes {
@@ -75,7 +76,7 @@ const getMenuItemsByRestaurant = graphql(
 	gql`
 		query restaurantById($id: Int!) {
 			restaurantById(id: $id) {
-				id
+        nodeId
 				menuItemsByRestaurant {
 					edges {
 						node {
@@ -118,7 +119,7 @@ const getAccountsByRestaurant = graphql(
 	gql`
 		query accountsByRestaurant($id: Int!) {
 			restaurantById(id: $id) {
-				id
+				nodeId
 				restaurantAccountsByRestaurant {
 					edges {
 						node {
@@ -160,7 +161,7 @@ const getAccountRolesForRestaurant = graphql(
 	gql`
 		query restaurantById($id: Int!) {
 			restaurantById(id: $id) {
-				id
+				nodeId
 				accountRolesForRestaurant {
 					edges {
 						node {
@@ -196,7 +197,7 @@ const getMenusByRestaurant = graphql(
 	gql`
 		query restaurantById($id: Int!) {
 			restaurantById(id: $id) {
-				id
+				nodeId
 				menusByRestaurant {
 					edges {
 						node {
@@ -237,7 +238,7 @@ const getServingLocationsByRestaurant = graphql(
 	gql`
 		query restaurantById($id: Int!) {
 			restaurantById(id: $id) {
-				id
+				nodeId
 				servingLocationsByRestaurant {
 					edges {
 						node {
@@ -278,7 +279,7 @@ const getFilesForRestaurant = graphql(
 	gql`
 		query restaurantById($id: Int!) {
 			restaurantById(id: $id) {
-				id
+				nodeId
 				filesForRestaurant {
 					edges {
 						node {

@@ -8,9 +8,11 @@ import {
 
 const menuFragment = gql`
   fragment menuInfo on Menu {
+    nodeId
     id
     menuInformationsByMenu {
       nodes {
+        nodeId
         language
         name
         description
@@ -53,6 +55,7 @@ const formatMenu = (menu = {}) => {
 const getMenu = graphql(
   gql`
     query menuById($id: Int!) {
+      nodeId
       menuById(id: $id) {
         ...menuInfo
       }

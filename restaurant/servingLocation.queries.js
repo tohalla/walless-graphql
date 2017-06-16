@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 
 const servingLocationFragment = gql`
   fragment servingLocationInfo on ServingLocation {
+    nodeId
     id
     name
     enabled
