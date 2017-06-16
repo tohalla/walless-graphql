@@ -14,15 +14,17 @@ const getCurrencies = graphql(
   gql`
     query allCurrencies {
       allCurrencies {
-        ...currencyInfo
+        nodes {
+          ...currencyInfo
+        }
       }
     }
     ${currencyFragment}
   `, {
     props: ({ownProps, data}) => {
-      const {allCurrencies: currencies, ...rest} = data;
+      const {allCurrencies = {}, ...rest} = data;
       return {getCurrencies: {
-        currencies,
+        currencies: allCurrencies.nodes,
         data: rest
       }};
     }

@@ -124,10 +124,12 @@ const getAccountsByRestaurant = graphql(
 					edges {
 						node {
 							accountRoleByRole {
+                nodeId
 								name
 							}
 							accountByAccount {
 								id
+                nodeId
 								firstName
 								lastName
 							}
@@ -166,6 +168,7 @@ const getAccountRolesForRestaurant = graphql(
 					edges {
 						node {
 							id
+              nodeId
 							name
 							description
 						}

@@ -23,6 +23,7 @@ const accountFragment = gql`
 const roleRightsFragment = gql`
   fragment roleRights on RestaurantRoleRight {
     id
+    nodeId
     allowAddPromotion
     allowAlterPromotion
     allowDeletePromotion
