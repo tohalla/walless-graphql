@@ -1,7 +1,10 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {menuItemFragment} from 'walless-graphql/restaurant/menuItem.queries';
+import {
+  menuItemFragment,
+  formatMenuItem
+} from 'walless-graphql/restaurant/menuItem.queries';
 
 const menuFragment = gql`
   fragment menuInfo on Menu {
@@ -33,7 +36,9 @@ const formatMenu = (menu = {}) => {
     ...rest
   } = menu;
   const menuItems = Array.isArray(menuMenuItemsByMenu.edges) ?
-    menuMenuItemsByMenu.edges.map(edge => edge.node.menuItemByMenuItem) : [];
+    menuMenuItemsByMenu.edges.map(edge =>
+      formatMenuItem(edge.node.menuItemByMenuItem)
+    ) : [];
   const information = Array.isArray(menuInformationsByMenu.nodes) ?
     menuInformationsByMenu.nodes.reduce(
       (prev, val) => {

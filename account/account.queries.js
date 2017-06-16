@@ -1,7 +1,10 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {restaurantFragment} from 'walless-graphql/restaurant/restaurant.queries';
+import {
+  formatRestaurant,
+  restaurantFragment
+} from 'walless-graphql/restaurant/restaurant.queries';
 
 const accountFragment = gql`
   fragment accountInformation on Account {
@@ -34,6 +37,18 @@ const roleRightsFragment = gql`
   }
 `;
 
+const formatAccount = (account = {}) => {
+  const {
+    restaurantAccountsByAccount = {},
+    ...rest
+  } = account;
+  const restaurants = Array.isArray(restaurantAccountsByAccount.edges) ?
+    restaurantAccountsByAccount.edges.map(edge =>
+      formatRestaurant(edge.node.restaurantByRestaurant)
+    ) : [];
+  return Object.assign({}, rest, {restaurants});
+};
+
 const getActiveAccount = graphql(
   gql`
     query {
@@ -56,7 +71,10 @@ const getActiveAccount = graphql(
   {
     props: ({ownProps, data: {getActiveAccount: account, ...rest}}) => {
       return {
-        getActiveAccount: {account, data: rest}
+        getActiveAccount: {
+          account: formatAccount(account),
+          data: rest
+        }
       };
     }
   }
@@ -65,5 +83,6 @@ const getActiveAccount = graphql(
 export {
   accountFragment,
   roleRightsFragment,
-  getActiveAccount
+  getActiveAccount,
+  formatAccount
 };

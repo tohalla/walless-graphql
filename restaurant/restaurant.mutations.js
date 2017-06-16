@@ -1,3 +1,4 @@
+// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -16,6 +17,62 @@ const createRestaurant = graphql(
   `, {
     props: ({mutate}) => ({
       createRestaurant: restaurant => mutate({variables: {input: {restaurant}}})
+    })
+  }
+);
+
+const createRestaurantInformation = graphql(
+  gql`
+  mutation createRestaurantInformation($input: CreateRestaurantInformationInput!) {
+    createRestaurantInformation(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      createRestaurantInformation: (items: Object[] | Object) => {
+        (Array.isArray(items) ? items : [items])
+          .forEach(restaurantInformation =>
+            mutate({
+              variables: {
+                input: {restaurantInformation}
+              }
+            })
+          );
+      }
+    })
+  }
+);
+
+const updateRestaurantInformation = graphql(
+  gql`
+  mutation updateRestaurantInformation($input: UpdateRestaurantInformationByLanguageAndRestaurantInput!) {
+    updateRestaurantInformationByLanguageAndRestaurant(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      updateRestaurantInformation: (items: Object[] | Object) => {
+        (Array.isArray(items) ? items : [items])
+          .forEach(restaurantInformation => {
+            const {
+              restaurant,
+              language,
+              __typename, // eslint-disable-line
+              ...information
+            } = restaurantInformation;
+            mutate({
+              variables: {
+                input: {
+                  restaurant,
+                  language,
+                  restaurantInformationPatch: information
+                }
+              }
+            });
+          });
+      }
     })
   }
 );
@@ -44,4 +101,9 @@ const updateRestaurant = graphql(
   }
 );
 
-export {createRestaurant, updateRestaurant};
+export {
+  createRestaurant,
+  updateRestaurant,
+  createRestaurantInformation,
+  updateRestaurantInformation
+};

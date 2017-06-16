@@ -16,11 +16,32 @@ import {fileFragment} from 'walless-graphql/file.queries';
 const restaurantFragment = gql`
 	fragment restaurantInfo on Restaurant {
 		id
-		name
-		description
 		createdBy
+    restaurantInformationsByRestaurant {
+      nodes {
+        language
+        name
+        description
+      }
+    }
 	}
 `;
+
+const formatRestaurant = (restaurant = {}) => {
+  const {
+    restaurantInformationsByRestaurant = {},
+    ...rest
+  } = restaurant;
+  const information = Array.isArray(restaurantInformationsByRestaurant.nodes) ?
+    restaurantInformationsByRestaurant.nodes.reduce(
+      (prev, val) => {
+        const {language, ...restInformation} = val;
+        return Object.assign({}, prev, {[language]: restInformation});
+      },
+      {}
+    ) : [];
+  return Object.assign({}, rest, {information});
+};
 
 const getRestaurant = graphql(
 	gql`
@@ -41,7 +62,10 @@ const getRestaurant = graphql(
 		props: ({ownProps, data}) => {
 			const {restaurantById, ...rest} = data;
 			return {
-				getRestaurant: {restaurant: restaurantById, data: rest}
+				getRestaurant: {
+          restaurant: formatRestaurant(restaurantById),
+          data: rest
+        }
 			};
 		}
 	}
@@ -297,5 +321,6 @@ export {
 	getMenusByRestaurant,
 	getAccountRolesForRestaurant,
 	getServingLocationsByRestaurant,
-	getFilesForRestaurant
+	getFilesForRestaurant,
+  formatRestaurant
 };
