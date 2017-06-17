@@ -12,6 +12,8 @@ const menuItemFragment = gql`
     createdBy
     category
     type
+    price
+    currency
     menuItemInformationsByMenuItem {
       nodes {
         nodeId

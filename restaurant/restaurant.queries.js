@@ -10,6 +10,7 @@ import {
 	formatMenu,
 	menuFragment
 } from 'walless-graphql/restaurant/menu.queries';
+import {currencyFragment} from 'walless-graphql/misc.queries';
 import {servingLocationFragment} from 'walless-graphql/restaurant/servingLocation.queries';
 import {fileFragment} from 'walless-graphql/file.queries';
 
@@ -18,6 +19,9 @@ const restaurantFragment = gql`
 		id
     nodeId
 		createdBy
+    currencyByCurrency {
+      ...currencyInfo
+    }
     restaurantInformationsByRestaurant {
       nodes {
         language
@@ -26,11 +30,13 @@ const restaurantFragment = gql`
       }
     }
 	}
+  ${currencyFragment}
 `;
 
 const formatRestaurant = (restaurant = {}) => {
   const {
     restaurantInformationsByRestaurant = {},
+    currencyByCurrency: currency,
     ...rest
   } = restaurant;
   const information = Array.isArray(restaurantInformationsByRestaurant.nodes) ?
@@ -41,7 +47,11 @@ const formatRestaurant = (restaurant = {}) => {
       },
       {}
     ) : [];
-  return Object.assign({}, rest, {information});
+  return Object.assign(
+    {},
+    rest,
+    {information, currency}
+  );
 };
 
 const getRestaurant = graphql(

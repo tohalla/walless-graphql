@@ -41,6 +41,9 @@ const roleRightsFragment = gql`
 `;
 
 const formatAccount = (account = {}) => {
+  if (!account) {
+    return account;
+  }
   const {
     restaurantAccountsByAccount = {},
     ...rest

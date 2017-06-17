@@ -6,6 +6,7 @@ const currencyFragment = gql`
     nodeId
     code
     name
+    symbol
     zeroDecimal
   }
 `;
