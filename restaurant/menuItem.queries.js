@@ -2,6 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
 import {fileFragment} from 'walless-graphql/file.queries';
+import {currencyFragment} from 'walless-graphql/misc.queries';
 
 const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {
@@ -13,7 +14,9 @@ const menuItemFragment = gql`
     category
     type
     price
-    currency
+    currencyByCurrency {
+      ...currencyInfo
+    }
     menuItemInformationsByMenuItem {
       nodes {
         nodeId
@@ -32,6 +35,7 @@ const menuItemFragment = gql`
       }
     }
   }
+  ${currencyFragment}
   ${fileFragment}
 `;
 
@@ -39,6 +43,7 @@ const formatMenuItem = (menuItem = {}) => {
   const {
     menuItemFilesByMenuItem = {},
     menuItemInformationsByMenuItem = {},
+    currencyByCurrency: currency,
     ...rest
   } = menuItem;
   const files = Array.isArray(menuItemFilesByMenuItem.edges) ?
@@ -51,7 +56,7 @@ const formatMenuItem = (menuItem = {}) => {
       },
       {}
     ) : [];
-  return Object.assign({}, rest, {files, information});
+  return Object.assign({}, rest, {files, information, currency});
 };
 
 const getMenuItem = graphql(
