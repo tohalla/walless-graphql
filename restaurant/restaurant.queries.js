@@ -1,6 +1,6 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {hasIn} from 'lodash/fp';
+import {get} from 'lodash/fp';
 
 import {
 	formatMenuItem,
@@ -11,6 +11,10 @@ import {
 	menuFragment
 } from 'walless-graphql/restaurant/menu.queries';
 import {currencyFragment} from 'walless-graphql/misc.queries';
+import {
+  formatOrder,
+  orderFragment
+} from 'walless-graphql/restaurant/order.queries';
 import {servingLocationFragment} from 'walless-graphql/restaurant/servingLocation.queries';
 import {fileFragment} from 'walless-graphql/file.queries';
 
@@ -83,46 +87,73 @@ const getRestaurant = graphql(
 );
 
 const getMenuItemsByRestaurant = graphql(
-	gql`
-		query restaurantById($id: Int!) {
-			restaurantById(id: $id) {
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
         nodeId
-				menuItemsByRestaurant {
-					edges {
-						node {
-							...menuItemInfo
-						}
-					}
-				}
-			}
-		}
-		${menuItemFragment}
-	`, {
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'object' ?
-					ownProps.restaurant.id : ownProps.restaurant
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
-			if (!hasIn(
-				[
-					'menuItemsByRestaurant',
-					'edges'
-				])(restaurantById)
-			) {
-				return {data: rest};
-			}
-			return {
-				getMenuItemsByRestaurant: {
-					menuItems: restaurantById.menuItemsByRestaurant.edges
-						.map(edge => formatMenuItem(edge.node)),
-					data: rest
-				}
-			};
-		}
-	}
+        menuItemsByRestaurant {
+          edges {
+            node {
+              ...menuItemInfo
+            }
+          }
+        }
+      }
+    }
+    ${menuItemFragment}
+  `, {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...rest} = data;
+      return {
+        getMenuItemsByRestaurant: {
+          menuItems: (get(['menuItemsByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => formatMenuItem(edge.node)),
+          data: rest
+        }
+      };
+    }
+  }
+);
+
+const getOrdersByRestaurant = graphql(
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        ordersByRestaurant {
+          edges {
+            node {
+              ...orderInfo
+            }
+          }
+        }
+      }
+    }
+    ${orderFragment}
+  `, {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...rest} = data;
+      return {
+        getOrdersByRestaurant: {
+          orders: (get(['ordersByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => formatOrder(edge.node)),
+          data: rest
+        }
+      };
+    }
+  }
 );
 
 const getAccountsByRestaurant = graphql(
@@ -159,9 +190,8 @@ const getAccountsByRestaurant = graphql(
 			const {restaurantById, ...rest} = data;
 			return {
 				getAccountsByRestaurant: {
-					accounts: hasIn(['restaurantAccountsByRestaurant', 'edges'])(restaurantById) ?
-						restaurantById.restaurantAccountsByRestaurant.edges
-							.map(edge => formatMenuItem(edge.node)) : [],
+          accounts: (get(['restaurantAccountsByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => edge.node),
 					data: rest
 				}
 			};
@@ -197,8 +227,8 @@ const getAccountRolesForRestaurant = graphql(
 			const {restaurantById, ...rest} = data;
 			return {
 				getAccountRolesForRestaurant: {
-					roles: hasIn(['accountRolesForRestaurant', 'edges'])(restaurantById) ?
-						restaurantById.accountRolesForRestaurant.edges.map(edge => edge.node) : [],
+          roles: (get(['accountRolesForRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => edge.node),
 					data: rest
 				}
 			};
@@ -230,17 +260,9 @@ const getMenusByRestaurant = graphql(
 		}),
 		props: ({ownProps, data}) => {
 			const {restaurantById, ...rest} = data;
-			if (!hasIn(
-				[
-					'menusByRestaurant',
-					'edges'
-				])(restaurantById)
-			) {
-				return {data: rest};
-			}
 			return {getMenusByRestaurant: {
-				menus: restaurantById.menusByRestaurant.edges
-					.map(edge => formatMenu(edge.node)),
+        menus: (get(['menusByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatMenu(edge.node)),
 				data: rest
 			}};
 		}
@@ -271,17 +293,9 @@ const getServingLocationsByRestaurant = graphql(
 		}),
 		props: ({ownProps, data}) => {
 			const {restaurantById, ...rest} = data;
-			if (!hasIn(
-				[
-					'servingLocationsByRestaurant',
-					'edges'
-				])(restaurantById)
-			) {
-				return {data: rest};
-			}
 			return {getServingLocationsByRestaurant: {
-				servingLocations: restaurantById.servingLocationsByRestaurant.edges
-					.map(edge => edge.node),
+        servingLocations: (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => edge.node),
 				data: rest
 			}};
 		}
@@ -314,11 +328,8 @@ const getFilesForRestaurant = graphql(
 			const {restaurantById, ...rest} = data;
 			return {
 				getFilesForRestaurant: {
-					files: hasIn([
-						'filesForRestaurant',
-						'edges']
-					)(restaurantById) ?
-						restaurantById.filesForRestaurant.edges.map(edge => edge.node) : [],
+          files: (get(['filesForRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => edge.node),
 					data: rest
 				}
 			};
@@ -336,5 +347,6 @@ export {
 	getAccountRolesForRestaurant,
 	getServingLocationsByRestaurant,
 	getFilesForRestaurant,
-  formatRestaurant
+  formatRestaurant,
+  getOrdersByRestaurant
 };

@@ -5,40 +5,7 @@ import {
   formatRestaurant,
   restaurantFragment
 } from 'walless-graphql/restaurant/restaurant.queries';
-
-const accountFragment = gql`
-  fragment accountInformation on Account {
-    nodeId
-    id
-    firstName
-    lastName
-    emailByEmail {
-      nodeId
-      id
-      email
-    }
-  }
-`;
-
-const roleRightsFragment = gql`
-  fragment roleRights on RestaurantRoleRight {
-    id
-    nodeId
-    allowAddPromotion
-    allowAlterPromotion
-    allowDeletePromotion
-    allowAddMenu
-    allowAlterMenu
-    allowDeleteMenu
-    allowAddMenuItem
-    allowAlterMenuItem
-    allowDeleteMenuItem
-    allowChangeRestaurantDescription
-    allowChangeRestaurantDescription
-    allowAlterRestaurantRoles
-    allowMapRoles
-  }
-`;
+import {accountFragment} from 'walless-graphql/account/account.fragments';
 
 const formatAccount = (account = {}) => {
   if (!account) {
@@ -59,7 +26,7 @@ const getActiveAccount = graphql(
   gql`
     query {
       getActiveAccount {
-        ...accountInformation
+        ...accountInfo
         restaurantAccountsByAccount {
           edges {
             node {
@@ -87,8 +54,6 @@ const getActiveAccount = graphql(
 );
 
 export {
-  accountFragment,
-  roleRightsFragment,
   getActiveAccount,
   formatAccount
 };
