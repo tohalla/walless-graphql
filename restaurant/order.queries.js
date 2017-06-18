@@ -7,7 +7,9 @@ import {menuItemFragment} from 'walless-graphql/restaurant/menuItem.queries';
 const orderFragment = gql`
   fragment orderInfo on Order {
     createdAt
-    orderCompleted
+    completed
+    accepted
+    message
     accountByCreatedBy {
       ...accountInfo
     }
