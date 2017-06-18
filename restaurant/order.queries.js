@@ -9,13 +9,17 @@ const orderFragment = gql`
     createdAt
     completed
     accepted
+    declined
+    paid
     message
     accountByCreatedBy {
       ...accountInfo
     }
     orderMenuItemsByOrder {
       nodes {
-        ...menuItemInfo
+        menuItemByMenuItem {
+          ...menuItemInfo
+        }
       }
     }
   }
@@ -26,9 +30,16 @@ const orderFragment = gql`
 const formatOrder = (order = {}) => {
   const {
     accountByCreatedBy: orderer,
-    orderMenuItemsByOrder: {nodes: items = []}
+    orderMenuItemsByOrder: {nodes = []}
   } = order;
-  return Object.assign({}, order, {orderer, items});
+  return Object.assign(
+    {},
+    order,
+    {
+      orderer,
+      items: nodes.map(node => node.menuItemByMenuItem)
+    }
+  );
 };
 
 const getOrder = graphql(
