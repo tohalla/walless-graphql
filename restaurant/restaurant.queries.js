@@ -23,6 +23,13 @@ const restaurantFragment = gql`
 		id
     nodeId
 		createdBy
+    restaurantFilesByRestaurant {
+      nodes {
+        fileByFile {
+          ...fileInfo
+        }
+      }
+    }
     currencyByCurrency {
       ...currencyInfo
     }
@@ -35,12 +42,14 @@ const restaurantFragment = gql`
     }
 	}
   ${currencyFragment}
+  ${fileFragment}
 `;
 
 const formatRestaurant = (restaurant = {}) => {
   const {
     restaurantInformationsByRestaurant = {},
     currencyByCurrency: currency,
+    restaurantFilesByRestaurant = {},
     ...rest
   } = restaurant;
   const information = Array.isArray(restaurantInformationsByRestaurant.nodes) ?
@@ -51,10 +60,16 @@ const formatRestaurant = (restaurant = {}) => {
       },
       {}
     ) : [];
+  const files = Array.isArray(restaurantFilesByRestaurant.nodes) ?
+    restaurantFilesByRestaurant.nodes.map(node => node.fileByFile) : [];
   return Object.assign(
     {},
     rest,
-    {information, currency}
+    {
+      information,
+      currency,
+      files
+    }
   );
 };
 

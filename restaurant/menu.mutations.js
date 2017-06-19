@@ -84,6 +84,7 @@ const updateMenuInformation = graphql(
               menu,
               language,
               __typename, // eslint-disable-line
+              nodeId, // eslint-disable-line
               ...information
             } = menuInformation;
             mutate({

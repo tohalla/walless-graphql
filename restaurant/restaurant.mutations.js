@@ -60,6 +60,7 @@ const updateRestaurantInformation = graphql(
               restaurant,
               language,
               __typename, // eslint-disable-line
+              nodeId, // eslint-disable-line
               ...information
             } = restaurantInformation;
             mutate({
@@ -101,9 +102,29 @@ const updateRestaurant = graphql(
   }
 );
 
+const updateRestaurantFiles = graphql(
+  gql`
+  mutation updateRestaurantFiles($input: UpdateRestaurantFilesInput!) {
+    updateRestaurantFiles(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      updateRestaurantFiles: (restaurant: Number, files: Number[]) => mutate({
+        variables: {
+          input: {restaurant, files}
+        }
+      })
+    })
+  }
+);
+
+
 export {
   createRestaurant,
   updateRestaurant,
   createRestaurantInformation,
-  updateRestaurantInformation
+  updateRestaurantInformation,
+  updateRestaurantFiles
 };

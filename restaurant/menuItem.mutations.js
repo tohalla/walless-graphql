@@ -72,8 +72,8 @@ const createMenuItemInformation = graphql(
 
 const updateMenuItemInformation = graphql(
   gql`
-  mutation updateMenuItemInformation($input: UpdateMenuItemInformationByLanguageAndMenuInput!) {
-    updateMenuItemInformationByLanguageAndMenu(input: $input) {
+  mutation updateMenuItemInformation($input: UpdateMenuItemInformationByLanguageAndMenuItemInput!) {
+    updateMenuItemInformationByLanguageAndMenuItem(input: $input) {
       clientMutationId
     }
   }
@@ -83,15 +83,16 @@ const updateMenuItemInformation = graphql(
         (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
           .forEach(menuItemInformation => {
             const {
-              menu_item,
+              menuItem,
               language,
               __typename, // eslint-disable-line
+              nodeId, // eslint-disable-line
               ...information
             } = menuItemInformation;
             mutate({
               variables: {
                 input: {
-                  menu_item,
+                  menuItem,
                   language,
                   menuItemInformationPatch: information
                 }
