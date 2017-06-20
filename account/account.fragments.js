@@ -8,13 +8,17 @@ const formatAccount = (account = {}) => {
   }
   const {
     restaurantAccountsByAccount = {},
+    emailByEmail: email,
     ...rest
   } = account;
   const restaurants = Array.isArray(restaurantAccountsByAccount.edges) ?
     restaurantAccountsByAccount.edges.map(edge =>
       formatRestaurant(edge.node.restaurantByRestaurant)
     ) : [];
-  return Object.assign({}, rest, {restaurants});
+  return Object.assign({}, rest, {
+    restaurants,
+    email
+  });
 };
 
 const accountFragment = gql`
