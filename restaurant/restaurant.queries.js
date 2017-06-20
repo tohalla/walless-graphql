@@ -15,8 +15,15 @@ import {
   formatOrder,
   orderFragment
 } from 'walless-graphql/restaurant/order.queries';
-import {servingLocationFragment} from 'walless-graphql/restaurant/servingLocation.queries';
+import {
+  servingLocationFragment,
+  formatServingLocation
+} from 'walless-graphql/restaurant/servingLocation.queries';
 import {fileFragment} from 'walless-graphql/file.queries';
+import {
+  accountFragment,
+  formatAccount
+} from 'walless-graphql/account/account.fragments';
 
 const restaurantFragment = gql`
 	fragment restaurantInfo on Restaurant {
@@ -184,16 +191,14 @@ const getAccountsByRestaurant = graphql(
 								name
 							}
 							accountByAccount {
-								id
-                nodeId
-								firstName
-								lastName
+                ...accountInfo
 							}
 						}
 					}
 				}
 			}
 		}
+    ${accountFragment}
 	`, {
 		options: ownProps => ({
 			variables: {
@@ -206,7 +211,13 @@ const getAccountsByRestaurant = graphql(
 			return {
 				getAccountsByRestaurant: {
           accounts: (get(['restaurantAccountsByRestaurant', 'edges'])(restaurantById) || [])
-            .map(edge => edge.node),
+            .map(edge => {
+              const {accountRoleByRole, accountByAccount} = edge.node;
+              return {
+                role: accountRoleByRole,
+                account: formatAccount(accountByAccount
+              )};
+            }),
 					data: rest
 				}
 			};
@@ -310,7 +321,7 @@ const getServingLocationsByRestaurant = graphql(
 			const {restaurantById, ...rest} = data;
 			return {getServingLocationsByRestaurant: {
         servingLocations: (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
-          .map(edge => edge.node),
+          .map(edge => formatServingLocation(edge.node)),
 				data: rest
 			}};
 		}

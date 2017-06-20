@@ -2,11 +2,13 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {servingLocationFragment} from 'walless-graphql/restaurant/servingLocation.queries';
+import {
+  servingLocationFragment
+} from 'walless-graphql/restaurant/servingLocation.queries';
 
 const createServingLocation = graphql(
   gql`
-  mutation createServingLocation($servingLocation: CreateServingLocationInput!) {
+  mutation createServingLocation($input: CreateServingLocationInput!) {
     createServingLocation(input: $servingLocation) {
       servingLocation {
         ...servingLocationInfo
@@ -17,7 +19,7 @@ const createServingLocation = graphql(
   `, {
     props: ({mutate, data}) => ({
       createServingLocation: servingLocation => mutate({
-        variables: {servingLocation: {servingLocation}}
+        variables: {input: {servingLocation}}
       })
     })
   }

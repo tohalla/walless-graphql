@@ -1,5 +1,22 @@
 import gql from 'graphql-tag';
 
+import {formatRestaurant} from 'walless-graphql/restaurant/restaurant.queries';
+
+const formatAccount = (account = {}) => {
+  if (!account) {
+    return account;
+  }
+  const {
+    restaurantAccountsByAccount = {},
+    ...rest
+  } = account;
+  const restaurants = Array.isArray(restaurantAccountsByAccount.edges) ?
+    restaurantAccountsByAccount.edges.map(edge =>
+      formatRestaurant(edge.node.restaurantByRestaurant)
+    ) : [];
+  return Object.assign({}, rest, {restaurants});
+};
+
 const accountFragment = gql`
   fragment accountInfo on Account {
     nodeId
@@ -36,5 +53,6 @@ const roleRightsFragment = gql`
 
 export {
   accountFragment,
+  formatAccount,
   roleRightsFragment
 };
