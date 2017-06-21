@@ -32,11 +32,12 @@ const orderFragment = gql`
 const formatOrder = (order = {}) => {
   const {
     accountByCreatedBy: orderer,
-    orderMenuItemsByOrder: {nodes = []}
+    orderMenuItemsByOrder: {nodes = []},
+    ...rest
   } = order;
   return Object.assign(
     {},
-    order,
+    rest,
     {
       orderer,
       items: nodes.map(node => node.menuItemByMenuItem)
