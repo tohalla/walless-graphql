@@ -69,11 +69,11 @@ const getMenu = graphql(
       }
     }),
     props: ({ownProps, data}) => {
-      const {menuById, ...rest} = data;
-      return {getMenu: {
+      const {menuById, ...getMenu} = data;
+      return {
         menu: formatMenu(menuById),
-        data: rest
-      }};
+        getMenu
+      };
     }
   }
 );

@@ -23,11 +23,11 @@ const getCurrencies = graphql(
     ${currencyFragment}
   `, {
     props: ({ownProps, data}) => {
-      const {allCurrencies = {}, ...rest} = data;
-      return {getCurrencies: {
+      const {allCurrencies = {}, ...getCurrencies} = data;
+      return {
         currencies: allCurrencies.nodes,
-        data: rest
-      }};
+        getCurrencies
+      };
     }
   }
 );

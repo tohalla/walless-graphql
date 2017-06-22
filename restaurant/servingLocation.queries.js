@@ -53,11 +53,11 @@ const getServingLocation = graphql(
       }
     }),
     props: ({ownProps, data}) => {
-      const {servingLocationById, ...rest} = data;
-      return {getServingLocation: {
+      const {servingLocationById, ...getServingLocation} = data;
+      return {
         servingLocation: formatServingLocation(servingLocationById),
-        data: rest
-      }};
+        getServingLocation
+      };
     }
   }
 );

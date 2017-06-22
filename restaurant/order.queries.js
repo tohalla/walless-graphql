@@ -4,6 +4,17 @@ import gql from 'graphql-tag';
 import {accountFragment, formatAccount} from 'walless-graphql/account/account.fragments';
 import {menuItemFragment, formatMenuItem} from 'walless-graphql/restaurant/menuItem.queries';
 
+const orderItemFragment = gql`
+  fragment orderItemInfo on OrderItem {
+    id
+    nodeId
+    menuItemByMenuItem {
+      ...menuItemInfo
+    }
+  }
+  ${menuItemFragment}
+`;
+
 const orderFragment = gql`
   fragment orderInfo on Order {
     id
@@ -14,33 +25,49 @@ const orderFragment = gql`
     declined
     paid
     message
+    servingLocationByServingLocation {
+      id
+      name
+    }
     accountByCreatedBy {
       ...accountInfo
     }
-    orderMenuItemsByOrder {
+    orderItemsByOrder {
       nodes {
-        menuItemByMenuItem {
-          ...menuItemInfo
-        }
+        ...orderItemInfo
       }
     }
   }
   ${accountFragment}
-  ${menuItemFragment}
+  ${orderItemFragment}
 `;
+
+const formatOrderItem = (orderItem = {}) => {
+  const {
+    menuItemByMenuItem: menuItem,
+    ...rest
+  } = orderItem;
+  return Object.assign(
+    {},
+    rest,
+    {menuItem: formatMenuItem(menuItem)}
+  );
+};
 
 const formatOrder = (order = {}) => {
   const {
     accountByCreatedBy: orderer,
-    orderMenuItemsByOrder: {nodes = []},
+    orderItemsByOrder: {nodes = []},
+    servingLocationByServingLocation: servingLocation,
     ...rest
   } = order;
   return Object.assign(
     {},
     rest,
     {
+      servingLocation,
       orderer: formatAccount(orderer),
-      items: nodes.map(node => formatMenuItem(node.menuItemByMenuItem))
+      items: nodes.map(node => formatOrderItem(node))
     }
   );
 };
@@ -62,12 +89,10 @@ const getOrder = graphql(
       }
     }),
     props: ({ownProps, data}) => {
-      const {orderById, ...rest} = data;
+      const {orderById, ...getOrder} = data;
       return {
-        getOrder: {
-          restaurant: formatOrder(orderById),
-          data: rest
-        }
+        restaurant: formatOrder(orderById),
+        getOrder
       };
     }
   }
@@ -76,5 +101,7 @@ const getOrder = graphql(
 export {
   orderFragment,
   formatOrder,
-  getOrder
+  getOrder,
+  orderItemFragment,
+  formatOrderItem
 };

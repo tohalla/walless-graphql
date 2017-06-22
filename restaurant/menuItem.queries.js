@@ -75,11 +75,11 @@ const getMenuItem = graphql(
       }
     }),
     props: ({ownProps, data}) => {
-      const {menuItemById, ...rest} = data;
-      return {getMenuItem: {
+      const {menuItemById, ...getMenuItem} = data;
+      return {
         menuItem: formatMenuItem(menuItemById),
-        data: rest
-      }};
+        getMenuItem
+      };
     }
   }
 );

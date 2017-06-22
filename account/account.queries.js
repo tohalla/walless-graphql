@@ -1,7 +1,11 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {get} from 'lodash/fp';
 
-import {restaurantFragment} from 'walless-graphql/restaurant/restaurant.queries';
+import {
+  restaurantFragment,
+  formatRestaurant
+} from 'walless-graphql/restaurant/restaurant.queries';
 import {
   formatAccount,
   accountFragment
@@ -12,6 +16,24 @@ const getActiveAccount = graphql(
     query {
       getActiveAccount {
         ...accountInfo
+      }
+    }
+    ${accountFragment}
+  `,
+  {
+    props: ({ownProps, data: {getActiveAccount: account, ...getActiveAccount}}) => {
+      return {
+        account: formatAccount(account),
+        getActiveAccount
+      };
+    }
+  }
+);
+
+const getRestaurantsByAccount = graphql(
+  gql`
+    query accountById($id: Int!) {
+      accountById(id: $id) {
         restaurantAccountsByAccount {
           edges {
             node {
@@ -23,22 +45,28 @@ const getActiveAccount = graphql(
         }
       }
     }
-    ${accountFragment}
     ${restaurantFragment}
-  `,
-  {
-    props: ({ownProps, data: {getActiveAccount: account, ...rest}}) => {
+  `, {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.account === 'object' ?
+          ownProps.account.id : ownProps.account
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {accountById, ...getRestaurantsByAccount} = data;
       return {
-        getActiveAccount: {
-          account: formatAccount(account),
-          data: rest
-        }
+        restaurants: (get(['restaurantAccountsByAccount', 'edges'])(accountById) || [])
+          .map(edge => formatRestaurant(get(['node', 'restaurantByRestaurant'])(edge))),
+        getRestaurantsByAccount
       };
     }
   }
 );
 
+
 export {
   getActiveAccount,
-  formatAccount
+  formatAccount,
+  getRestaurantsByAccount
 };

@@ -21,18 +21,18 @@ const createOrder = graphql(
   }
 );
 
-const createOrderMenuItem = graphql(
+const createOrderItem = graphql(
   gql`
-  mutation createOrderMenuItem($input: CreateOrderMenuItemInput!) {
-    createOrderMenuItem(input: $input) {
+  mutation createOrderItem($input: CreateOrderItemInput!) {
+    createOrderItem(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      createOrderMenuItem: (orderMenuItem) => mutate({
+      createOrderItem: (orderItem) => mutate({
         variables: {
-          input: {orderMenuItem}
+          input: {orderItem}
         }
       })
     })
@@ -41,5 +41,5 @@ const createOrderMenuItem = graphql(
 
 export {
   createOrder,
-  createOrderMenuItem
+  createOrderItem
 };

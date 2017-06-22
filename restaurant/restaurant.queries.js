@@ -97,12 +97,10 @@ const getRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
+			const {restaurantById, ...getRestaurant} = data;
 			return {
-				getRestaurant: {
-          restaurant: formatRestaurant(restaurantById),
-          data: rest
-        }
+				restaurant: formatRestaurant(restaurantById),
+        getRestaurant
 			};
 		}
 	}
@@ -131,13 +129,11 @@ const getMenuItemsByRestaurant = graphql(
       }
     }),
     props: ({ownProps, data}) => {
-      const {restaurantById, ...rest} = data;
+      const {restaurantById, ...getMenuItemsByRestaurant} = data;
       return {
-        getMenuItemsByRestaurant: {
-          menuItems: (get(['menuItemsByRestaurant', 'edges'])(restaurantById) || [])
-            .map(edge => formatMenuItem(edge.node)),
-          data: rest
-        }
+        menuItems: (get(['menuItemsByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatMenuItem(edge.node)),
+        getMenuItemsByRestaurant
       };
     }
   }
@@ -166,13 +162,11 @@ const getOrdersByRestaurant = graphql(
       }
     }),
     props: ({ownProps, data}) => {
-      const {restaurantById, ...rest} = data;
+      const {restaurantById, ...getOrdersByRestaurant} = data;
       return {
-        getOrdersByRestaurant: {
-          orders: (get(['ordersByRestaurant', 'edges'])(restaurantById) || [])
-            .map(edge => formatOrder(edge.node)),
-          data: rest
-        }
+        orders: (get(['ordersByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatOrder(edge.node)),
+        getOrdersByRestaurant
       };
     }
   }
@@ -207,19 +201,17 @@ const getAccountsByRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
+			const {restaurantById, ...getAccountsByRestaurant} = data;
 			return {
-				getAccountsByRestaurant: {
-          accounts: (get(['restaurantAccountsByRestaurant', 'edges'])(restaurantById) || [])
-            .map(edge => {
-              const {accountRoleByRole, accountByAccount} = edge.node;
-              return {
-                role: accountRoleByRole,
-                account: formatAccount(accountByAccount
-              )};
-            }),
-					data: rest
-				}
+        accounts: (get(['restaurantAccountsByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => {
+            const {accountRoleByRole, accountByAccount} = edge.node;
+            return {
+              role: accountRoleByRole,
+              account: formatAccount(accountByAccount
+            )};
+          }),
+				getAccountsByRestaurant
 			};
 		}
 	}
@@ -250,13 +242,11 @@ const getAccountRolesForRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
+			const {restaurantById, ...getAccountRolesForRestaurant} = data;
 			return {
-				getAccountRolesForRestaurant: {
-          roles: (get(['accountRolesForRestaurant', 'edges'])(restaurantById) || [])
-            .map(edge => edge.node),
-					data: rest
-				}
+        roles: (get(['accountRolesForRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => edge.node),
+				getAccountRolesForRestaurant
 			};
 		}
 	}
@@ -285,12 +275,12 @@ const getMenusByRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
-			return {getMenusByRestaurant: {
+			const {restaurantById, ...getMenusByRestaurant} = data;
+			return {
         menus: (get(['menusByRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => formatMenu(edge.node)),
-				data: rest
-			}};
+				getMenusByRestaurant
+      };
 		}
 	}
 );
@@ -318,12 +308,12 @@ const getServingLocationsByRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
-			return {getServingLocationsByRestaurant: {
+			const {restaurantById, ...getServingLocationsByRestaurant} = data;
+			return {
         servingLocations: (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => formatServingLocation(edge.node)),
-				data: rest
-			}};
+				getServingLocationsByRestaurant
+      };
 		}
 	}
 );
@@ -351,13 +341,11 @@ const getFilesForRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...rest} = data;
+			const {restaurantById, ...getFilesForRestaurant} = data;
 			return {
-				getFilesForRestaurant: {
-          files: (get(['filesForRestaurant', 'edges'])(restaurantById) || [])
-            .map(edge => edge.node),
-					data: rest
-				}
+        files: (get(['filesForRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => edge.node),
+				getFilesForRestaurant
 			};
 		}
 	}
