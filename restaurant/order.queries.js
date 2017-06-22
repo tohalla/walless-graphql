@@ -1,8 +1,8 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {accountFragment} from 'walless-graphql/account/account.fragments';
-import {menuItemFragment} from 'walless-graphql/restaurant/menuItem.queries';
+import {accountFragment, formatAccount} from 'walless-graphql/account/account.fragments';
+import {menuItemFragment, formatMenuItem} from 'walless-graphql/restaurant/menuItem.queries';
 
 const orderFragment = gql`
   fragment orderInfo on Order {
@@ -39,8 +39,8 @@ const formatOrder = (order = {}) => {
     {},
     rest,
     {
-      orderer,
-      items: nodes.map(node => node.menuItemByMenuItem)
+      orderer: formatAccount(orderer),
+      items: nodes.map(node => formatMenuItem(node.menuItemByMenuItem))
     }
   );
 };
