@@ -11,6 +11,15 @@ const currencyFragment = gql`
   }
 `;
 
+const dietFragment = gql`
+  fragment dietInfo on Diet {
+    nodeId
+    id
+    name
+    description
+  }
+`;
+
 const getCurrencies = graphql(
   gql`
     query allCurrencies {
@@ -34,5 +43,6 @@ const getCurrencies = graphql(
 
 export {
   getCurrencies,
+  dietFragment,
   currencyFragment
 };

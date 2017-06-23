@@ -1,8 +1,39 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {get} from 'lodash/fp';
 
 import {fileFragment} from 'walless-graphql/file.queries';
 import {currencyFragment} from 'walless-graphql/misc.queries';
+
+const menuItemTypeFragment = gql`
+  fragment menuItemTypeInfo on MenuItemType {
+    nodeId
+    id
+    name
+    description
+  }
+`;
+
+const menuItemCategoryFragment = gql`
+  fragment menuItemCategoryInfo on MenuItemCategory {
+    nodeId
+    id
+    name
+    description
+  }
+`;
+
+const formatMenuItemCategory = (menuItemCategory = {}) => {
+  const {
+    menuItemTypeByType,
+    ...rest
+  } = menuItemCategory;
+  return Object.assign(
+    {},
+    rest,
+    menuItemTypeByType ? {menuItemType: menuItemTypeByType} : null
+  );
+};
 
 const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {
@@ -11,9 +42,13 @@ const menuItemFragment = gql`
     restaurant
     createdAt
     createdBy
-    category
-    type
     price
+    menuItemTypeByType {
+      ...menuItemTypeInfo
+    }
+    menuItemCategoryByCategory {
+      ...menuItemCategoryInfo
+    }
     currencyByCurrency {
       ...currencyInfo
     }
@@ -37,12 +72,16 @@ const menuItemFragment = gql`
   }
   ${currencyFragment}
   ${fileFragment}
+  ${menuItemTypeFragment}
+  ${menuItemCategoryFragment}
 `;
 
 const formatMenuItem = (menuItem = {}) => {
   const {
     menuItemFilesByMenuItem = {},
     menuItemInformationsByMenuItem = {},
+    menuItemCategoryByCategory = {},
+    menuItemTypeByType = {},
     currencyByCurrency: currency,
     ...rest
   } = menuItem;
@@ -56,7 +95,29 @@ const formatMenuItem = (menuItem = {}) => {
       },
       {}
     ) : [];
-  return Object.assign({}, rest, {files, information, currency});
+  return Object.assign(
+    {},
+    rest,
+    {
+      files,
+      information,
+      currency,
+      menuItemCategory: formatMenuItemCategory(menuItemCategoryByCategory || {}),
+      menuItemType: formatMenuItemType(menuItemTypeByType || {})
+    }
+  );
+};
+
+const formatMenuItemType = (menuItemType = {}) => {
+  const {
+    menuItemCategoriesByType,
+    ...rest
+  } = menuItemType;
+  return Object.assign(
+    {},
+    rest,
+    menuItemCategoriesByType ? {menuItemCategories: menuItemCategoriesByType.nodes} : null
+  );
 };
 
 const getMenuItem = graphql(
@@ -84,8 +145,37 @@ const getMenuItem = graphql(
   }
 );
 
+const getMenuItemTypes = graphql(
+  gql`
+    query allMenuItemTypes {
+      allMenuItemTypes {
+        nodes {
+          ...menuItemTypeInfo
+          menuItemCategoriesByType {
+            nodes {
+              ...menuItemCategoryInfo
+            }
+          }
+        }
+      }
+    }
+    ${menuItemTypeFragment}
+    ${menuItemCategoryFragment}
+  `, {
+    props: ({ownProps, data}) => {
+      const {allMenuItemTypes, ...getMenuItemTypes} = data;
+      return {
+        menuItemTypes: (get(['nodes'])(allMenuItemTypes) || [])
+          .map(node => formatMenuItemType(node)),
+        getMenuItemTypes
+      };
+    }
+  }
+);
+
 export {
   menuItemFragment,
   getMenuItem,
-  formatMenuItem
+  formatMenuItem,
+  getMenuItemTypes
 };
