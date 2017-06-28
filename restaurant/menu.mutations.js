@@ -1,6 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {omit} from 'lodash/fp';
 
 import {menuFragment} from 'walless-graphql/restaurant/menu.queries';
 
@@ -23,8 +24,8 @@ const createMenu = graphql(
 
 const updateMenu = graphql(
   gql`
-  mutation updateMenuById($input: UpdateMenuByIdInput!) {
-    updateMenuById(input: $input) {
+  mutation updateMenu($input: UpdateMenuInput!) {
+    updateMenu(input: $input) {
       menu {
         ...menuInfo
       }
@@ -33,14 +34,9 @@ const updateMenu = graphql(
   ${menuFragment}
   `, {
     props: ({mutate}) => ({
-      updateMenu: menu => mutate({
-        variables: {
-          input: {
-            id: menu.id,
-            menuPatch: menu
-          }
-        }
-      })
+      updateMenu: menu => mutate({variables: {
+        input: {menu: omit(['__typename', 'nodeId'])(menu)}
+      }})
     })
   }
 );
@@ -70,34 +66,22 @@ const createMenuInformation = graphql(
 
 const updateMenuInformation = graphql(
   gql`
-  mutation updateMenuInformation($input: UpdateMenuInformationByLanguageAndMenuInput!) {
-    updateMenuInformationByLanguageAndMenu(input: $input) {
+  mutation updateMenuInformation($input: UpdateMenuInformationInput!) {
+    updateMenuInformation(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuInformation: (menuInformationItems: Object[] | Object) => {
+      updateMenuInformation: (menuInformationItems: Object[] | Object) =>
         (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
-          .forEach(menuInformation => {
-            const {
-              menu,
-              language,
-              __typename, // eslint-disable-line
-              nodeId, // eslint-disable-line
-              ...information
-            } = menuInformation;
-            mutate({
-              variables: {
-                input: {
-                  menu,
-                  language,
-                  menuInformationPatch: information
-                }
+          .forEach(menuInformation =>
+            mutate({variables: {
+              input: {
+                menuInformation: omit(['__typename', 'nodeId'])(menuInformation)
               }
-            });
-          });
-      }
+            }})
+          )
     })
   }
 );

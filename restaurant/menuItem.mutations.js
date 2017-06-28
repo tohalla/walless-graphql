@@ -1,6 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {omit} from 'lodash/fp';
 
 import {menuItemFragment} from 'walless-graphql/restaurant/menuItem.queries';
 
@@ -25,8 +26,8 @@ const createMenuItem = graphql(
 
 const updateMenuItem = graphql(
   gql`
-  mutation updateMenuItemById($input: UpdateMenuItemByIdInput!) {
-    updateMenuItemById(input: $input) {
+  mutation updateMenuItem($input: UpdateMenuItemInput!) {
+    updateMenuItem(input: $input) {
       menuItem {
         ...menuItemInfo
       }
@@ -35,14 +36,9 @@ const updateMenuItem = graphql(
   ${menuItemFragment}
   `, {
     props: ({mutate}) => ({
-      updateMenuItem: (menuItem: {id: Number}) => mutate({
-        variables: {
-          input: {
-            id: menuItem.id,
-            menuItemPatch: menuItem
-          }
-        }
-      })
+      updateMenuItem: (menuItem: {id: Number}) => mutate({variables: {
+        input: {menuItem: omit(['__typename', 'nodeId'])(menuItem)}
+      }})
     })
   }
 );
@@ -72,34 +68,22 @@ const createMenuItemInformation = graphql(
 
 const updateMenuItemInformation = graphql(
   gql`
-  mutation updateMenuItemInformation($input: UpdateMenuItemInformationByLanguageAndMenuItemInput!) {
-    updateMenuItemInformationByLanguageAndMenuItem(input: $input) {
+  mutation updateMenuItemInformation($input: UpdateMenuItemInformationInput!) {
+    updateMenuItemInformation(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItemInformation: (menuItemInformationItems: Object[] | Object) => {
+      updateMenuItemInformation: (menuItemInformationItems: Object[] | Object) =>
         (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
-          .forEach(menuItemInformation => {
-            const {
-              menuItem,
-              language,
-              __typename, // eslint-disable-line
-              nodeId, // eslint-disable-line
-              ...information
-            } = menuItemInformation;
-            mutate({
-              variables: {
-                input: {
-                  menuItem,
-                  language,
-                  menuItemInformationPatch: information
-                }
+          .forEach(menuItemInformation =>
+            mutate({variables: {
+              input: {
+                menuItemInformation: omit(['__typename', 'nodeId'])(menuItemInformation)
               }
-            });
-          });
-      }
+            }})
+          )
     })
   }
 );

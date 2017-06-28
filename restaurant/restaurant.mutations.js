@@ -1,6 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {omit} from 'lodash/fp';
 
 import {restaurantFragment} from 'walless-graphql/restaurant/restaurant.queries';
 
@@ -46,42 +47,30 @@ const createRestaurantInformation = graphql(
 
 const updateRestaurantInformation = graphql(
   gql`
-  mutation updateRestaurantInformation($input: UpdateRestaurantInformationByLanguageAndRestaurantInput!) {
-    updateRestaurantInformationByLanguageAndRestaurant(input: $input) {
+  mutation updateRestaurantInformation($input: UpdateRestaurantInformationInput!) {
+    updateRestaurantInformation(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateRestaurantInformation: (items: Object[] | Object) => {
+      updateRestaurantInformation: (items: Object[] | Object) =>
         (Array.isArray(items) ? items : [items])
-          .forEach(restaurantInformation => {
-            const {
-              restaurant,
-              language,
-              __typename, // eslint-disable-line
-              nodeId, // eslint-disable-line
-              ...information
-            } = restaurantInformation;
-            mutate({
-              variables: {
-                input: {
-                  restaurant,
-                  language,
-                  restaurantInformationPatch: information
-                }
+          .forEach(restaurantInformation =>
+            mutate({variables: {
+              input: {
+                restaurantInformation: omit(['__typename', 'nodeId'])(restaurantInformation)
               }
-            });
-          });
-      }
+            }})
+          )
     })
   }
 );
 
 const updateRestaurant = graphql(
   gql`
-  mutation updateRestaurantById($input: UpdateRestaurantByIdInput!) {
-    updateRestaurantById(input: $input) {
+  mutation updateRestaurant($input: UpdateRestaurantInput!) {
+    updateRestaurant(input: $input) {
       restaurant {
         ...restaurantInfo
       }
@@ -90,14 +79,9 @@ const updateRestaurant = graphql(
   ${restaurantFragment}
   `, {
     props: ({mutate}) => ({
-      updateRestaurant: restaurant => mutate({
-        variables: {
-          input: {
-            id: restaurant.id,
-            restaurantPatch: restaurant
-          }
-        }
-      })
+      updateRestaurant: (restaurant: {id: Number}) => mutate({variables: {
+        input: {restaurant: omit(['__typename', 'nodeId'])(restaurant)}
+      }})
     })
   }
 );

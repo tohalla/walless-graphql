@@ -47,6 +47,8 @@ const getRestaurantsByAccount = graphql(
     }
     ${restaurantFragment}
   `, {
+    skip: ownProps =>
+      typeof ownProps.account === 'object' && !get(['account', 'id'])(ownProps),
     options: ownProps => ({
       variables: {
         id: typeof ownProps.account === 'object' ?

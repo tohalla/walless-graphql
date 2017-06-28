@@ -1,6 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {omit} from 'lodash/fp';
 
 import {
   servingLocationFragment
@@ -27,8 +28,8 @@ const createServingLocation = graphql(
 
 const updateServingLocation = graphql(
   gql`
-  mutation updateServingLocationById($input: UpdateServingLocationByIdInput!) {
-    updateServingLocationById(input: $input) {
+  mutation updateServingLocation($input: UpdateServingLocationInput!) {
+    updateServingLocation(input: $input) {
       servingLocation {
         ...servingLocationInfo
       }
@@ -37,14 +38,9 @@ const updateServingLocation = graphql(
   ${servingLocationFragment}
   `, {
     props: ({mutate}) => ({
-      updateServingLocation: (servingLocation: {id: Number}) => mutate({
-        variables: {
-          input: {
-            id: servingLocation.id,
-            servingLocationPatch: servingLocation
-          }
-        }
-      })
+      updateServingLocation: (servingLocation: {id: Number}) => mutate({variables: {
+        input: {servingLocation: omit(['__typename', 'nodeId'])(servingLocation)}
+      }})
     })
   }
 );
