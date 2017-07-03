@@ -86,18 +86,18 @@ const updateRestaurant = graphql(
   }
 );
 
-const updateRestaurantFiles = graphql(
+const updateRestaurantImages = graphql(
   gql`
-  mutation updateRestaurantFiles($input: UpdateRestaurantFilesInput!) {
-    updateRestaurantFiles(input: $input) {
+  mutation updateRestaurantImages($input: UpdateRestaurantImagesInput!) {
+    updateRestaurantImages(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateRestaurantFiles: (restaurant: Number, files: Number[]) => mutate({
+      updateRestaurantImages: (restaurant: Number, images: Number[]) => mutate({
         variables: {
-          input: {restaurant, files}
+          input: {restaurant, images}
         }
       })
     })
@@ -110,5 +110,5 @@ export {
   updateRestaurant,
   createRestaurantInformation,
   updateRestaurantInformation,
-  updateRestaurantFiles
+  updateRestaurantImages
 };
