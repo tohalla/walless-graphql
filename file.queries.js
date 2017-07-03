@@ -9,4 +9,14 @@ const fileFragment = gql`
   }
 `;
 
-export {fileFragment};
+const imageFragment = gql`
+  fragment imageInfo on Image {
+    nodeId
+    id
+    uri
+    key
+    thumbnail
+  }
+`;
+
+export {fileFragment, imageFragment};

@@ -19,7 +19,7 @@ import {
   servingLocationFragment,
   formatServingLocation
 } from 'walless-graphql/restaurant/servingLocation.queries';
-import {fileFragment} from 'walless-graphql/file.queries';
+import {imageFragment} from 'walless-graphql/file.queries';
 import {
   accountFragment,
   formatAccount
@@ -30,10 +30,10 @@ const restaurantFragment = gql`
 		id
     nodeId
 		createdBy
-    restaurantFilesByRestaurant {
+    restaurantImagesByRestaurant {
       nodes {
-        fileByFile {
-          ...fileInfo
+        imageByImage {
+          ...imageInfo
         }
       }
     }
@@ -49,14 +49,14 @@ const restaurantFragment = gql`
     }
 	}
   ${currencyFragment}
-  ${fileFragment}
+  ${imageFragment}
 `;
 
 const formatRestaurant = (restaurant = {}) => {
   const {
     restaurantInformationsByRestaurant = {},
     currencyByCurrency: currency,
-    restaurantFilesByRestaurant = {},
+    restaurantImagesByRestaurant = {},
     ...rest
   } = restaurant;
   const information = Array.isArray(restaurantInformationsByRestaurant.nodes) ?
@@ -67,15 +67,15 @@ const formatRestaurant = (restaurant = {}) => {
       },
       {}
     ) : [];
-  const files = Array.isArray(restaurantFilesByRestaurant.nodes) ?
-    restaurantFilesByRestaurant.nodes.map(node => node.fileByFile) : [];
+  const images = Array.isArray(restaurantImagesByRestaurant.nodes) ?
+    restaurantImagesByRestaurant.nodes.map(node => node.imageByImage) : [];
   return Object.assign(
     {},
     rest,
     {
       information,
       currency,
-      files
+      images
     }
   );
 };
@@ -318,21 +318,21 @@ const getServingLocationsByRestaurant = graphql(
 	}
 );
 
-const getFilesForRestaurant = graphql(
+const getImagesForRestaurant = graphql(
 	gql`
 		query restaurantById($id: Int!) {
 			restaurantById(id: $id) {
 				nodeId
-				filesForRestaurant {
+				imagesForRestaurant {
 					edges {
 						node {
-							...fileInfo
+							...imageInfo
 						}
 					}
 				}
 			}
 		}
-		${fileFragment}
+		${imageFragment}
 	`, {
 		options: ownProps => ({
 			variables: {
@@ -341,11 +341,11 @@ const getFilesForRestaurant = graphql(
 			}
 		}),
 		props: ({ownProps, data}) => {
-			const {restaurantById, ...getFilesForRestaurant} = data;
+			const {restaurantById, ...getImagesForRestaurant} = data;
 			return {
-        files: (get(['filesForRestaurant', 'edges'])(restaurantById) || [])
+        images: (get(['imagesForRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => edge.node),
-				getFilesForRestaurant
+				getImagesForRestaurant
 			};
 		}
 	}
@@ -360,7 +360,7 @@ export {
 	getMenusByRestaurant,
 	getAccountRolesForRestaurant,
 	getServingLocationsByRestaurant,
-	getFilesForRestaurant,
+	getImagesForRestaurant,
   formatRestaurant,
   getOrdersByRestaurant
 };

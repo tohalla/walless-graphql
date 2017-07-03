@@ -10,6 +10,7 @@ const accountFragment = gql`
     id
     firstName
     lastName
+    language
     email
   }
 `;

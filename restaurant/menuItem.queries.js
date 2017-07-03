@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {get} from 'lodash/fp';
 
-import {fileFragment} from 'walless-graphql/file.queries';
+import {imageFragment} from 'walless-graphql/file.queries';
 import {currencyFragment} from 'walless-graphql/misc.queries';
 
 const menuItemTypeFragment = gql`
@@ -60,33 +60,33 @@ const menuItemFragment = gql`
         description
       }
     }
-    menuItemFilesByMenuItem {
+    menuItemImagesByMenuItem {
       edges {
         node {
-          fileByFile {
-            ...fileInfo
+          imageByImage {
+            ...imageInfo
           }
         }
       }
     }
   }
   ${currencyFragment}
-  ${fileFragment}
+  ${imageFragment}
   ${menuItemTypeFragment}
   ${menuItemCategoryFragment}
 `;
 
 const formatMenuItem = (menuItem = {}) => {
   const {
-    menuItemFilesByMenuItem = {},
+    menuItemImagesByMenuItem = {},
     menuItemInformationsByMenuItem = {},
     menuItemCategoryByCategory = {},
     menuItemTypeByType = {},
     currencyByCurrency: currency,
     ...rest
   } = menuItem;
-  const files = Array.isArray(menuItemFilesByMenuItem.edges) ?
-    menuItemFilesByMenuItem.edges.map(edge => edge.node.fileByFile) : [];
+  const images = Array.isArray(menuItemImagesByMenuItem.edges) ?
+    menuItemImagesByMenuItem.edges.map(edge => edge.node.imageByImage) : [];
   const information = Array.isArray(menuItemInformationsByMenuItem.nodes) ?
     menuItemInformationsByMenuItem.nodes.reduce(
       (prev, val) => {
@@ -99,7 +99,7 @@ const formatMenuItem = (menuItem = {}) => {
     {},
     rest,
     {
-      files,
+      images,
       information,
       currency,
       menuItemCategory: formatMenuItemCategory(menuItemCategoryByCategory || {}),
