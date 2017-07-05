@@ -1,6 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {omit} from 'lodash/fp';
 
 import {orderFragment} from 'walless-graphql/restaurant/order.queries';
 
@@ -16,30 +17,30 @@ const createOrder = graphql(
   ${orderFragment}
   `, {
     props: ({mutate}) => ({
-      createOrder: order => mutate({variables: {input: {order}}})
+      createOrder: (order, items) => mutate({variables: {input: {order, items}}})
     })
   }
 );
 
-const createOrderItem = graphql(
+const createOrder = graphql(
   gql`
-  mutation createOrderItem($input: CreateOrderItemInput!) {
-    createOrderItem(input: $input) {
-      clientMutationId
+  mutation updateOrder($input: UpdateOrderInput!) {
+    updateOrder(input: $input) {
+      order {
+        ...orderInfo
+      }
     }
   }
+  ${orderFragment}
   `, {
     props: ({mutate}) => ({
-      createOrderItem: (orderItem) => mutate({
-        variables: {
-          input: {orderItem}
-        }
-      })
+      updateOrder: order => mutate({variables: {
+        input: {order: omit(['__typename', 'nodeId'])(order)}
+      }})
     })
   }
 );
 
 export {
-  createOrder,
-  createOrderItem
+  createOrder
 };
