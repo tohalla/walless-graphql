@@ -122,6 +122,8 @@ const getMenuItemsByRestaurant = graphql(
     }
     ${menuItemFragment}
   `, {
+    skip: ownProps =>
+      !ownProps.restaurant,
     options: ownProps => ({
       variables: {
         id: typeof ownProps.restaurant === 'object' ?
@@ -155,6 +157,8 @@ const getOrdersByRestaurant = graphql(
     }
     ${orderFragment}
   `, {
+    skip: ownProps =>
+      !ownProps.restaurant,
     options: ownProps => ({
       variables: {
         id: typeof ownProps.restaurant === 'object' ?
@@ -194,6 +198,8 @@ const getAccountsByRestaurant = graphql(
 		}
     ${accountFragment}
 	`, {
+    skip: ownProps =>
+      !ownProps.restaurant,
 		options: ownProps => ({
 			variables: {
 				id: typeof ownProps.restaurant === 'object' ?
@@ -235,6 +241,8 @@ const getAccountRolesForRestaurant = graphql(
 			}
 		}
 	`, {
+    skip: ownProps =>
+      !ownProps.restaurant,
 		options: ownProps => ({
 			variables: {
 				id: typeof ownProps.restaurant === 'object' ?
@@ -268,6 +276,8 @@ const getMenusByRestaurant = graphql(
 		}
 		${menuFragment}
 	`, {
+    skip: ownProps =>
+      !ownProps.restaurant,
 		options: ownProps => ({
 			variables: {
 				id: typeof ownProps.restaurant === 'object' ?
@@ -301,6 +311,8 @@ const getServingLocationsByRestaurant = graphql(
 		}
 		${servingLocationFragment}
 	`, {
+    skip: ownProps =>
+      !ownProps.restaurant,
 		options: ownProps => ({
 			variables: {
 				id: typeof ownProps.restaurant === 'object' ?
@@ -334,6 +346,8 @@ const getImagesForRestaurant = graphql(
 		}
 		${imageFragment}
 	`, {
+    skip: ownProps =>
+      !ownProps.restaurant,
 		options: ownProps => ({
 			variables: {
 				id: typeof ownProps.restaurant === 'object' ?

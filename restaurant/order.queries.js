@@ -29,6 +29,7 @@ const orderFragment = gql`
       id
       name
     }
+    restaurant
     accountByCreatedBy {
       ...accountInfo
     }
@@ -56,7 +57,7 @@ const formatOrderItem = (orderItem = {}) => {
 
 const formatOrder = (order = {}) => {
   const {
-    accountByCreatedBy: orderer,
+    accountByCreatedBy: createdBy,
     orderItemsByOrder: {nodes = []},
     servingLocationByServingLocation: servingLocation,
     ...rest
@@ -66,7 +67,7 @@ const formatOrder = (order = {}) => {
     rest,
     {
       servingLocation,
-      orderer: formatAccount(orderer),
+      createdBy: formatAccount(createdBy),
       items: nodes.map(node => formatOrderItem(node))
     }
   );
