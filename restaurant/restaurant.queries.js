@@ -61,6 +61,7 @@ const formatRestaurant = (restaurant = {}) => {
     restaurantInformationsByRestaurant = {},
     currencyByCurrency: currency,
     restaurantImagesByRestaurant = {},
+    addressByAddress: address,
     ...rest
   } = restaurant;
   const information = Array.isArray(restaurantInformationsByRestaurant.nodes) ?
@@ -79,7 +80,8 @@ const formatRestaurant = (restaurant = {}) => {
     {
       information,
       currency,
-      images
+      images,
+      address
     }
   );
 };

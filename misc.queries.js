@@ -20,6 +20,8 @@ const addressFragment = gql`
     postalCode
     country
     coordinates
+    locality
+    placeId
   }
 `;
 
