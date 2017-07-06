@@ -11,6 +11,18 @@ const currencyFragment = gql`
   }
 `;
 
+const addressFragment = gql`
+  fragment addressInfo on Address {
+    nodeId
+    id
+    route
+    streetNumber
+    postalCode
+    country
+    coordinates
+  }
+`;
+
 const dietFragment = gql`
   fragment dietInfo on Diet {
     nodeId
@@ -42,6 +54,7 @@ const getCurrencies = graphql(
 );
 
 export {
+  addressFragment,
   getCurrencies,
   dietFragment,
   currencyFragment

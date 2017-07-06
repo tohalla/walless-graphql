@@ -10,7 +10,7 @@ import {
 	formatMenu,
 	menuFragment
 } from 'walless-graphql/restaurant/menu.queries';
-import {currencyFragment} from 'walless-graphql/misc.queries';
+import {addressFragment, currencyFragment} from 'walless-graphql/misc.queries';
 import {
   formatOrder,
   orderFragment
@@ -30,6 +30,9 @@ const restaurantFragment = gql`
 		id
     nodeId
 		createdBy
+    addressByAddress {
+      ...addressInfo
+    }
     restaurantImagesByRestaurant {
       nodes {
         imageByImage {
@@ -50,6 +53,7 @@ const restaurantFragment = gql`
 	}
   ${currencyFragment}
   ${imageFragment}
+  ${addressFragment}
 `;
 
 const formatRestaurant = (restaurant = {}) => {
