@@ -10,7 +10,7 @@ import {
 const createServingLocation = graphql(
   gql`
   mutation createServingLocation($input: CreateServingLocationInput!) {
-    createServingLocation(input: $servingLocation) {
+    createServingLocation(input: $input) {
       servingLocation {
         ...servingLocationInfo
       }
