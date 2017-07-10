@@ -51,7 +51,7 @@ const getRestaurantsByAccount = graphql(
       typeof ownProps.account === 'object' && !get(['account', 'id'])(ownProps),
     options: ownProps => ({
       variables: {
-        id: typeof ownProps.account === 'object' ?
+        id: typeof ownProps.account === 'object' && ownProps.account ?
           ownProps.account.id : ownProps.account
       }
     }),
