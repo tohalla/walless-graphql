@@ -1,7 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {omit, pick} from 'lodash/fp';
+import {pick} from 'lodash/fp';
 
 import {orderFragment} from 'walless-graphql/restaurant/order.queries';
 

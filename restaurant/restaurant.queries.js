@@ -3,12 +3,12 @@ import gql from 'graphql-tag';
 import {get} from 'lodash/fp';
 
 import {
-	formatMenuItem,
-	menuItemFragment
+  formatMenuItem,
+  menuItemFragment
 } from 'walless-graphql/restaurant/menuItem.queries';
 import {
-	formatMenu,
-	menuFragment
+  formatMenu,
+  menuFragment
 } from 'walless-graphql/restaurant/menu.queries';
 import {addressFragment, currencyFragment} from 'walless-graphql/misc.queries';
 import {
@@ -26,10 +26,10 @@ import {
 } from 'walless-graphql/account/account.fragments';
 
 const restaurantFragment = gql`
-	fragment restaurantInfo on Restaurant {
-		id
+  fragment restaurantInfo on Restaurant {
+    id
     nodeId
-		createdBy
+    createdBy
     addressByAddress {
       ...addressInfo
     }
@@ -50,7 +50,7 @@ const restaurantFragment = gql`
         description
       }
     }
-	}
+  }
   ${currencyFragment}
   ${imageFragment}
   ${addressFragment}
@@ -87,29 +87,29 @@ const formatRestaurant = (restaurant = {}) => {
 };
 
 const getRestaurant = graphql(
-	gql`
-		query restaurantById($id: Int!) {
-			restaurantById(id: $id) {
-				...restaurantInfo
-			}
-		}
-		${restaurantFragment}
-	`, {
-		skip: ownProps =>
-			typeof ownProps.restaurant !== 'number',
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'number' ? ownProps.restaurant : null
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...getRestaurant} = data;
-			return {
-				restaurant: formatRestaurant(restaurantById),
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        ...restaurantInfo
+      }
+    }
+    ${restaurantFragment}
+  `, {
+    skip: ownProps =>
+      typeof ownProps.restaurant !== 'number',
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'number' ? ownProps.restaurant : null
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getRestaurant} = data;
+      return {
+        restaurant: formatRestaurant(restaurantById),
         getRestaurant
-			};
-		}
-	}
+      };
+    }
+  }
 );
 
 const getMenuItemsByRestaurant = graphql(
@@ -183,38 +183,38 @@ const getOrdersByRestaurant = graphql(
 );
 
 const getAccountsByRestaurant = graphql(
-	gql`
-		query accountsByRestaurant($id: Int!) {
-			restaurantById(id: $id) {
-				nodeId
-				restaurantAccountsByRestaurant {
-					edges {
-						node {
-							accountRoleByRole {
+  gql`
+    query accountsByRestaurant($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        restaurantAccountsByRestaurant {
+          edges {
+            node {
+              accountRoleByRole {
                 nodeId
-								name
-							}
-							accountByAccount {
+                name
+              }
+              accountByAccount {
                 ...accountInfo
-							}
-						}
-					}
-				}
-			}
-		}
+              }
+            }
+          }
+        }
+      }
+    }
     ${accountFragment}
-	`, {
+  `, {
     skip: ownProps =>
       !ownProps.restaurant,
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'object' ?
-					ownProps.restaurant.id : ownProps.restaurant
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...getAccountsByRestaurant} = data;
-			return {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getAccountsByRestaurant} = data;
+      return {
         accounts: (get(['restaurantAccountsByRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => {
             const {accountRoleByRole, accountByAccount} = edge.node;
@@ -223,164 +223,164 @@ const getAccountsByRestaurant = graphql(
               account: formatAccount(accountByAccount
             )};
           }),
-				getAccountsByRestaurant
-			};
-		}
-	}
+        getAccountsByRestaurant
+      };
+    }
+  }
 );
 
 const getAccountRolesForRestaurant = graphql(
-	gql`
-		query restaurantById($id: Int!) {
-			restaurantById(id: $id) {
-				nodeId
-				accountRolesForRestaurant {
-					edges {
-						node {
-							id
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        accountRolesForRestaurant {
+          edges {
+            node {
+              id
               nodeId
-							name
-							description
-						}
-					}
-				}
-			}
-		}
-	`, {
+              name
+              description
+            }
+          }
+        }
+      }
+    }
+  `, {
     skip: ownProps =>
       !ownProps.restaurant,
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'object' ?
-					ownProps.restaurant.id : ownProps.restaurant
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...getAccountRolesForRestaurant} = data;
-			return {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getAccountRolesForRestaurant} = data;
+      return {
         roles: (get(['accountRolesForRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => edge.node),
-				getAccountRolesForRestaurant
-			};
-		}
-	}
+        getAccountRolesForRestaurant
+      };
+    }
+  }
 );
 
 const getMenusByRestaurant = graphql(
-	gql`
-		query restaurantById($id: Int!) {
-			restaurantById(id: $id) {
-				nodeId
-				menusByRestaurant {
-					edges {
-						node {
-							...menuInfo
-						}
-					}
-				}
-			}
-		}
-		${menuFragment}
-	`, {
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        menusByRestaurant {
+          edges {
+            node {
+              ...menuInfo
+            }
+          }
+        }
+      }
+    }
+    ${menuFragment}
+  `, {
     skip: ownProps =>
       !ownProps.restaurant,
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'object' ?
-					ownProps.restaurant.id : ownProps.restaurant
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...getMenusByRestaurant} = data;
-			return {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getMenusByRestaurant} = data;
+      return {
         menus: (get(['menusByRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => formatMenu(edge.node)),
-				getMenusByRestaurant
+        getMenusByRestaurant
       };
-		}
-	}
+    }
+  }
 );
 
 const getServingLocationsByRestaurant = graphql(
-	gql`
-		query restaurantById($id: Int!) {
-			restaurantById(id: $id) {
-				nodeId
-				servingLocationsByRestaurant {
-					edges {
-						node {
-							...servingLocationInfo
-						}
-					}
-				}
-			}
-		}
-		${servingLocationFragment}
-	`, {
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        servingLocationsByRestaurant {
+          edges {
+            node {
+              ...servingLocationInfo
+            }
+          }
+        }
+      }
+    }
+    ${servingLocationFragment}
+  `, {
     skip: ownProps =>
       !ownProps.restaurant,
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'object' ?
-					ownProps.restaurant.id : ownProps.restaurant
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...getServingLocationsByRestaurant} = data;
-			return {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getServingLocationsByRestaurant} = data;
+      return {
         servingLocations: (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => formatServingLocation(edge.node)),
-				getServingLocationsByRestaurant
+        getServingLocationsByRestaurant
       };
-		}
-	}
+    }
+  }
 );
 
 const getImagesForRestaurant = graphql(
-	gql`
-		query restaurantById($id: Int!) {
-			restaurantById(id: $id) {
-				nodeId
-				imagesForRestaurant {
-					edges {
-						node {
-							...imageInfo
-						}
-					}
-				}
-			}
-		}
-		${imageFragment}
-	`, {
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        imagesForRestaurant {
+          edges {
+            node {
+              ...imageInfo
+            }
+          }
+        }
+      }
+    }
+    ${imageFragment}
+  `, {
     skip: ownProps =>
       !ownProps.restaurant,
-		options: ownProps => ({
-			variables: {
-				id: typeof ownProps.restaurant === 'object' ?
-					ownProps.restaurant.id : ownProps.restaurant
-			}
-		}),
-		props: ({ownProps, data}) => {
-			const {restaurantById, ...getImagesForRestaurant} = data;
-			return {
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getImagesForRestaurant} = data;
+      return {
         images: (get(['imagesForRestaurant', 'edges'])(restaurantById) || [])
           .map(edge => edge.node),
-				getImagesForRestaurant
-			};
-		}
-	}
+        getImagesForRestaurant
+      };
+    }
+  }
 );
 
 
 export {
-	restaurantFragment,
-	getRestaurant,
-	getMenuItemsByRestaurant,
-	getAccountsByRestaurant,
-	getMenusByRestaurant,
-	getAccountRolesForRestaurant,
-	getServingLocationsByRestaurant,
-	getImagesForRestaurant,
+  restaurantFragment,
+  getRestaurant,
+  getMenuItemsByRestaurant,
+  getAccountsByRestaurant,
+  getMenusByRestaurant,
+  getAccountRolesForRestaurant,
+  getServingLocationsByRestaurant,
+  getImagesForRestaurant,
   formatRestaurant,
   getOrdersByRestaurant
 };
