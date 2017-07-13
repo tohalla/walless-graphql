@@ -173,9 +173,45 @@ const getMenuItemTypes = graphql(
   }
 );
 
+const getMenuItemsByRestaurant = graphql(
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        menuItemsByRestaurant {
+          edges {
+            node {
+              ...menuItemInfo
+            }
+          }
+        }
+      }
+    }
+    ${menuItemFragment}
+  `, {
+    skip: ownProps =>
+      !ownProps.restaurant,
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getMenuItemsByRestaurant} = data;
+      return {
+        menuItems: (get(['menuItemsByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatMenuItem(edge.node)),
+        getMenuItemsByRestaurant
+      };
+    }
+  }
+);
+
 export {
   menuItemFragment,
   getMenuItem,
   formatMenuItem,
-  getMenuItemTypes
+  getMenuItemTypes,
+  getMenuItemsByRestaurant
 };

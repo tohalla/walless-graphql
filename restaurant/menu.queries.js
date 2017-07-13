@@ -1,5 +1,6 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {get} from 'lodash/fp';
 
 import {
   menuItemFragment,
@@ -78,4 +79,39 @@ const getMenu = graphql(
   }
 );
 
-export {menuFragment, getMenu, formatMenu};
+const getMenusByRestaurant = graphql(
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        menusByRestaurant {
+          edges {
+            node {
+              ...menuInfo
+            }
+          }
+        }
+      }
+    }
+    ${menuFragment}
+  `, {
+    skip: ownProps =>
+      !ownProps.restaurant,
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getMenusByRestaurant} = data;
+      return {
+        menus: (get(['menusByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatMenu(edge.node)),
+        getMenusByRestaurant
+      };
+    }
+  }
+);
+
+export {menuFragment, getMenu, formatMenu, getMenusByRestaurant};

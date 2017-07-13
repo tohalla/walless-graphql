@@ -1,5 +1,6 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {get} from 'lodash/fp';
 
 import {
   accountFragment,
@@ -62,8 +63,44 @@ const getServingLocation = graphql(
   }
 );
 
+const getServingLocationsByRestaurant = graphql(
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        servingLocationsByRestaurant {
+          edges {
+            node {
+              ...servingLocationInfo
+            }
+          }
+        }
+      }
+    }
+    ${servingLocationFragment}
+  `, {
+    skip: ownProps =>
+      !ownProps.restaurant,
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getServingLocationsByRestaurant} = data;
+      return {
+        servingLocations: (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatServingLocation(edge.node)),
+        getServingLocationsByRestaurant
+      };
+    }
+  }
+);
+
 export {
   servingLocationFragment,
   formatServingLocation,
-  getServingLocation
+  getServingLocation,
+  getServingLocationsByRestaurant
 };

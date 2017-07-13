@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 
 import {accountFragment, formatAccount} from 'walless-graphql/account/account.fragments';
 import {menuItemFragment, formatMenuItem} from 'walless-graphql/restaurant/menuItem.queries';
+import {get} from 'lodash/fp';
 
 const orderItemFragment = gql`
   fragment orderItemInfo on OrderItem {
@@ -99,10 +100,46 @@ const getOrder = graphql(
   }
 );
 
+const getOrdersByRestaurant = graphql(
+  gql`
+    query restaurantById($id: Int!) {
+      restaurantById(id: $id) {
+        nodeId
+        ordersByRestaurant {
+          edges {
+            node {
+              ...orderInfo
+            }
+          }
+        }
+      }
+    }
+    ${orderFragment}
+  `, {
+    skip: ownProps =>
+      !ownProps.restaurant,
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.restaurant === 'object' ?
+          ownProps.restaurant.id : ownProps.restaurant
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {restaurantById, ...getOrdersByRestaurant} = data;
+      return {
+        orders: (get(['ordersByRestaurant', 'edges'])(restaurantById) || [])
+          .map(edge => formatOrder(edge.node)),
+        getOrdersByRestaurant
+      };
+    }
+  }
+);
+
 export {
   orderFragment,
   formatOrder,
   getOrder,
   orderItemFragment,
-  formatOrderItem
+  formatOrderItem,
+  getOrdersByRestaurant
 };
