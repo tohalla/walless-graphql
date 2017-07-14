@@ -83,17 +83,12 @@ const getOrder = graphql(
     }
     ${orderFragment}
   `, {
-    skip: ownProps =>
-      typeof ownProps.order !== 'number',
-    options: ownProps => ({
-      variables: {
-        id: typeof ownProps.order === 'number' ? ownProps.order : null
-      }
-    }),
+    skip: ownProps => typeof ownProps.order !== 'number',
+    options: ownProps => ({variables: {id: ownProps.order}}),
     props: ({ownProps, data}) => {
       const {orderById, ...getOrder} = data;
       return {
-        restaurant: formatOrder(orderById),
+        order: formatOrder(orderById),
         getOrder
       };
     }
@@ -116,8 +111,7 @@ const getOrdersByRestaurant = graphql(
     }
     ${orderFragment}
   `, {
-    skip: ownProps =>
-      !ownProps.restaurant,
+    skip: ownProps => !ownProps.restaurant,
     options: ownProps => ({
       variables: {
         id: typeof ownProps.restaurant === 'object' ?
@@ -135,11 +129,47 @@ const getOrdersByRestaurant = graphql(
   }
 );
 
+
+const getOrdersByAccount = graphql(
+  gql`
+    query accountById($id: Int!) {
+      accountById(id: $id) {
+        nodeId
+        ordersByCreatedBy {
+          edges {
+            node {
+              ...orderInfo
+            }
+          }
+        }
+      }
+    }
+    ${orderFragment}
+  `, {
+    skip: ownProps => !ownProps.account,
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.account === 'object' ?
+          ownProps.account.id : ownProps.account
+      }
+    }),
+    props: ({ownProps, data}) => {
+      const {accountById, ...getOrdersByAccount} = data;
+      return {
+        orders: (get(['ordersByCreatedBy', 'edges'])(accountById) || [])
+          .map(edge => formatOrder(edge.node)),
+        getOrdersByAccount
+      };
+    }
+  }
+);
+
 export {
   orderFragment,
   formatOrder,
   getOrder,
   orderItemFragment,
   formatOrderItem,
-  getOrdersByRestaurant
+  getOrdersByRestaurant,
+  getOrdersByAccount
 };

@@ -74,13 +74,8 @@ const getRestaurant = graphql(
     }
     ${restaurantFragment}
   `, {
-    skip: ownProps =>
-      typeof ownProps.restaurant !== 'number',
-    options: ownProps => ({
-      variables: {
-        id: typeof ownProps.restaurant === 'number' ? ownProps.restaurant : null
-      }
-    }),
+    skip: ownProps => typeof ownProps.restaurant !== 'number',
+    options: ownProps => ({variables: {id: ownProps.restaurant}}),
     props: ({ownProps, data}) => {
       const {restaurantById, ...getRestaurant} = data;
       return {
