@@ -78,7 +78,7 @@ const getOrder = graphql(
   gql`
     query orderById($id: Int!) {
       orderById(id: $id) {
-        ...restaurantInfo
+        ...orderInfo
       }
     }
     ${orderFragment}
