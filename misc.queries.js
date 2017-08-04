@@ -32,7 +32,7 @@ const dietFragment = gql`
     nodeId
     id
     color
-    dietInformationsByDiet {
+    dietI18nsByDiet {
       nodes {
         language
         nodeId
@@ -46,18 +46,18 @@ const dietFragment = gql`
 
 const formatDiet = (diet = {}) => {
   const {
-    dietInformationsByDiet,
+    dietI18nsByDiet,
     ...rest
   } = diet;
-  const information = Array.isArray(dietInformationsByDiet.nodes) ?
-    dietInformationsByDiet.nodes.reduce(
+  const i18n = Array.isArray(dietI18nsByDiet.nodes) ?
+    dietI18nsByDiet.nodes.reduce(
       (prev, val) => {
         const {language, ...restInformation} = val;
         return Object.assign({}, prev, {[language]: restInformation});
       },
       {}
     ) : [];
-  return Object.assign({}, rest, {information});
+  return Object.assign({}, rest, {i18n});
 };
 
 const getDiets = graphql(
