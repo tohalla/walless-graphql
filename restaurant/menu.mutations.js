@@ -1,7 +1,7 @@
 // @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {omit} from 'lodash/fp';
+import {omit, get} from 'lodash/fp';
 
 import {menuFragment} from 'walless-graphql/restaurant/menu.queries';
 
@@ -36,6 +36,22 @@ const updateMenu = graphql(
     props: ({mutate}) => ({
       updateMenu: menu => mutate({variables: {
         input: {menu: omit(['__typename', 'nodeId'])(menu)}
+      }})
+    })
+  }
+);
+
+const deleteMenu = graphql(
+  gql`
+  mutation deleteMenu($input: DeleteMenuInput!) {
+    deleteMenu(input: $input) {
+      clientMutationId
+    }
+  }
+  `, {
+    props: ({mutate}) => ({
+      deleteMenu: menu => mutate({variables: {
+        input: {menu: get('id')(menu) || menu}
       }})
     })
   }
@@ -107,6 +123,7 @@ const updateMenuItems = graphql(
 export {
   createMenu,
   updateMenu,
+  deleteMenu,
   updateMenuItems,
   createMenuInformation,
   updateMenuInformation
