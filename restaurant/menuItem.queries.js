@@ -3,7 +3,11 @@ import gql from 'graphql-tag';
 import {get} from 'lodash/fp';
 
 import {imageFragment} from 'walless-graphql/file.queries';
-import {currencyFragment} from 'walless-graphql/misc.queries';
+import {
+  currencyFragment,
+  dietFragment,
+  formatDiet
+} from 'walless-graphql/misc.queries';
 
 const menuItemTypeFragment = gql`
   fragment menuItemTypeInfo on MenuItemType {
@@ -60,6 +64,13 @@ const menuItemFragment = gql`
         description
       }
     }
+    menuItemDietsByMenuItem {
+      nodes {
+        dietByDiet {
+          ...dietInfo
+        }
+      }
+    }
     menuItemImagesByMenuItem {
       edges {
         node {
@@ -71,6 +82,7 @@ const menuItemFragment = gql`
     }
   }
   ${currencyFragment}
+  ${dietFragment}
   ${imageFragment}
   ${menuItemTypeFragment}
   ${menuItemCategoryFragment}
@@ -79,6 +91,7 @@ const menuItemFragment = gql`
 const formatMenuItem = (menuItem = {}) => {
   const {
     menuItemImagesByMenuItem = {},
+    menuItemDietsByMenuItem = {},
     menuItemInformationsByMenuItem = {},
     menuItemCategoryByCategory = {},
     menuItemTypeByType = {},
@@ -87,6 +100,8 @@ const formatMenuItem = (menuItem = {}) => {
   } = menuItem;
   const images = Array.isArray(menuItemImagesByMenuItem.edges) ?
     menuItemImagesByMenuItem.edges.map(edge => edge.node.imageByImage) : [];
+  const diets = Array.isArray(menuItemDietsByMenuItem.nodes) ?
+    menuItemDietsByMenuItem.nodes.map(node => formatDiet(node.dietByDiet)) : [];
   const information = Array.isArray(menuItemInformationsByMenuItem.nodes) ?
     menuItemInformationsByMenuItem.nodes.reduce(
       (prev, val) => {
@@ -102,6 +117,7 @@ const formatMenuItem = (menuItem = {}) => {
       images,
       information,
       currency,
+      diets,
       menuItemCategory: formatMenuItemCategory(menuItemCategoryByCategory || {}),
       menuItemType: formatMenuItemType(menuItemTypeByType || {})
     }
