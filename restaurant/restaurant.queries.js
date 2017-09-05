@@ -4,7 +4,16 @@ import gql from 'graphql-tag';
 import {addressFragment, currencyFragment} from 'walless-graphql/misc.queries';
 import {imageFragment} from 'walless-graphql/file.queries';
 
-const restaurantFragment = gql`
+export const restaurantInformationFragment = gql`
+  fragment restaurantInformationInfo on RestaurantInformation {
+    language
+    name
+    description
+    nodeId
+  }
+`;
+
+export const restaurantFragment = gql`
   fragment restaurantInfo on Restaurant {
     id
     nodeId
@@ -24,19 +33,17 @@ const restaurantFragment = gql`
     }
     restaurantInformationsByRestaurant {
       nodes {
-        language
-        name
-        description
-        nodeId
+        ...restaurantInformationInfo
       }
     }
   }
   ${currencyFragment}
   ${imageFragment}
   ${addressFragment}
+  ${restaurantInformationFragment}
 `;
 
-const formatRestaurant = (restaurant = {}) => {
+export const formatRestaurant = (restaurant = {}) => {
   const {
     restaurantInformationsByRestaurant = {},
     currencyByCurrency: currency,
@@ -66,15 +73,18 @@ const formatRestaurant = (restaurant = {}) => {
   );
 };
 
-const getRestaurant = graphql(
-  gql`
-    query restaurantById($id: Int!) {
-      restaurantById(id: $id) {
-        ...restaurantInfo
-      }
+export const getRestaurantQuery = gql`
+  query restaurantById($id: Int!) {
+    restaurantById(id: $id) {
+      ...restaurantInfo
     }
-    ${restaurantFragment}
-  `, {
+  }
+  ${restaurantFragment}
+`;
+
+export const getRestaurant = graphql(
+  getRestaurantQuery,
+  {
     skip: ownProps => typeof ownProps.restaurant !== 'number',
     options: ownProps => ({variables: {id: ownProps.restaurant}}),
     props: ({ownProps, data}) => {
@@ -87,9 +97,3 @@ const getRestaurant = graphql(
   }
 );
 
-
-export {
-  restaurantFragment,
-  getRestaurant,
-  formatRestaurant
-};

@@ -1,20 +1,25 @@
-// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {omit} from 'lodash/fp';
+import {omit, set} from 'lodash/fp';
 
-import {restaurantFragment} from 'walless-graphql/restaurant/restaurant.queries';
+import {
+  restaurantFragment,
+  restaurantInformationFragment,
+  getRestaurantQuery
+} from 'walless-graphql/restaurant/restaurant.queries';
+import {imageFragment} from 'walless-graphql/file.queries';
+import {dataIdFromObject} from 'walless-graphql/util';
 
-const createRestaurant = graphql(
+export const createRestaurant = graphql(
   gql`
-  mutation createRestaurant($input: CreateRestaurantInput!) {
-    createRestaurant(input: $input) {
-      restaurant {
-        ...restaurantInfo
+    mutation createRestaurant($input: CreateRestaurantInput!) {
+      createRestaurant(input: $input) {
+        restaurant {
+          ...restaurantInfo
+        }
       }
     }
-  }
-  ${restaurantFragment}
+    ${restaurantFragment}
   `, {
     props: ({mutate}) => ({
       createRestaurant: restaurant => mutate({variables: {input: {restaurant}}})
@@ -22,16 +27,16 @@ const createRestaurant = graphql(
   }
 );
 
-const createRestaurantInformation = graphql(
+export const createRestaurantInformation = graphql(
   gql`
-  mutation createRestaurantInformation($input: CreateRestaurantInformationInput!) {
-    createRestaurantInformation(input: $input) {
-      clientMutationId
+    mutation createRestaurantInformation($input: CreateRestaurantInformationInput!) {
+      createRestaurantInformation(input: $input) {
+        clientMutationId
+      }
     }
-  }
   `, {
     props: ({mutate}) => ({
-      createRestaurantInformation: (items: Object[] | Object) => {
+      createRestaurantInformation: (items) => {
         (Array.isArray(items) ? items : [items])
           .forEach(restaurantInformation =>
             mutate({
@@ -45,70 +50,102 @@ const createRestaurantInformation = graphql(
   }
 );
 
-const updateRestaurantInformation = graphql(
+export const updateRestaurantInformation = graphql(
   gql`
-  mutation updateRestaurantInformation($input: UpdateRestaurantInformationInput!) {
-    updateRestaurantInformation(input: $input) {
-      clientMutationId
+    mutation updateRestaurantInformation($input: UpdateRestaurantInformationInput!) {
+      updateRestaurantInformation(input: $input) {
+        restaurantInformation {
+          ...restaurantInformationInfo
+        }
+      }
     }
-  }
+    ${restaurantInformationFragment}
   `, {
     props: ({mutate}) => ({
-      updateRestaurantInformation: (items: Object[] | Object) =>
+      updateRestaurantInformation: (items) =>
         (Array.isArray(items) ? items : [items])
           .forEach(restaurantInformation =>
-            mutate({variables: {
-              input: {
-                restaurantInformation: omit(['__typename', 'nodeId'])(restaurantInformation)
-              }
-            }})
+            mutate({
+              variables: {
+                input: {
+                  restaurantInformation: omit(['__typename', 'nodeId'])(restaurantInformation)
+                }
+              },
+              update: (
+                store,
+                {data: {updateRestaurantInformation: {restaurantInformation}}}
+              ) => store.writeFragment({
+                fragment: restaurantInformationFragment,
+                id: dataIdFromObject(restaurantInformation),
+                data: restaurantInformation
+              })
+            })
           )
     })
   }
 );
 
-const updateRestaurant = graphql(
+export const updateRestaurant = graphql(
   gql`
-  mutation updateRestaurant($input: UpdateRestaurantInput!) {
-    updateRestaurant(input: $input) {
-      restaurant {
-        ...restaurantInfo
+    mutation updateRestaurant($input: UpdateRestaurantInput!) {
+      updateRestaurant(input: $input) {
+        restaurant {
+          ...restaurantInfo
+        }
       }
     }
-  }
   ${restaurantFragment}
   `, {
     props: ({mutate}) => ({
-      updateRestaurant: (restaurant: {id: Number}) => mutate({variables: {
-        input: {restaurant: omit(['__typename', 'nodeId'])(restaurant)}
-      }})
-    })
-  }
-);
-
-const updateRestaurantImages = graphql(
-  gql`
-  mutation updateRestaurantImages($input: UpdateRestaurantImagesInput!) {
-    updateRestaurantImages(input: $input) {
-      clientMutationId
-    }
-  }
-  `, {
-    props: ({mutate}) => ({
-      updateRestaurantImages: (restaurant: Number, images: Number[]) => mutate({
+      updateRestaurant: (restaurant) => mutate({
         variables: {
-          input: {restaurant, images}
-        }
+          input: {restaurant: omit(['__typename', 'nodeId'])(restaurant)}
+        },
+        update: (store, {data: {updateRestaurant: {restaurant}}}) =>
+          store.writeFragment({
+            fragment: restaurantFragment,
+            fragmentName: 'restaurantInfo',
+            id: dataIdFromObject(restaurant),
+            data: restaurant
+          })
       })
     })
   }
 );
 
-
-export {
-  createRestaurant,
-  updateRestaurant,
-  createRestaurantInformation,
-  updateRestaurantInformation,
-  updateRestaurantImages
-};
+export const updateRestaurantImages = graphql(
+  gql`
+    mutation updateRestaurantImages($input: UpdateRestaurantImagesInput!) {
+      updateRestaurantImages(input: $input) {
+        restaurantImages {
+          imageByImage {
+            ...imageInfo
+          }
+        }
+      }
+    }
+    ${imageFragment}
+  `, {
+    props: ({mutate}) => ({
+      updateRestaurantImages: (restaurant, images) => mutate({
+        variables: {
+          input: {restaurant, images}
+        },
+        update: (store, {data: {updateRestaurantImages: {restaurantImages}}}) => {
+          const old = store.readQuery({
+            query: getRestaurantQuery,
+            variables: {id: restaurant}
+          });
+          store.writeQuery({
+            query: getRestaurantQuery,
+            data: set([
+              'restaurantById',
+              'restaurantImagesByRestaurant',
+              'nodes'
+            ])(restaurantImages)(old)
+          });
+        }
+      })
+    })
+  }
+);

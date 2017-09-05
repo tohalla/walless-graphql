@@ -56,7 +56,7 @@ const formatMenu = (menu = {}) => {
 const getMenu = graphql(
   gql`
     query menuById($id: Int!) {
-      nodeId
+      id
       menuById(id: $id) {
         ...menuInfo
       }

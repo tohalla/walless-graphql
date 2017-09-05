@@ -25,7 +25,7 @@ const getImagesForRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         imagesForRestaurant {
           edges {
             node {
