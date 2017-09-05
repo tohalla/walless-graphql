@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 
 import {get} from 'lodash/fp';
 
-const ingredientFragment = gql`
+export const ingredientFragment = gql`
   fragment ingredientInfo on Ingredient {
     nodeId
     id
@@ -18,7 +18,7 @@ const ingredientFragment = gql`
   }
 `;
 
-const formatIngredient = (ingredient = {}) => {
+export const formatIngredient = (ingredient = {}) => {
   const {
     ingredientI18nsByIngredient,
     ...rest
@@ -34,7 +34,7 @@ const formatIngredient = (ingredient = {}) => {
   return Object.assign({}, rest, {i18n});
 };
 
-const getIngredients = graphql(
+export const getIngredients = graphql(
   gql`
     query allIngredients {
       allIngredients {
@@ -55,9 +55,3 @@ const getIngredients = graphql(
     }
   }
 );
-
-export {
-  formatIngredient,
-  ingredientFragment,
-  getIngredients
-};

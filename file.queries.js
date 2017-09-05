@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {get} from 'lodash/fp';
 
-const fileFragment = gql`
+export const fileFragment = gql`
   fragment fileInfo on File {
     nodeId
     id
@@ -11,7 +11,7 @@ const fileFragment = gql`
   }
 `;
 
-const imageFragment = gql`
+export const imageFragment = gql`
   fragment imageInfo on Image {
     nodeId
     id
@@ -21,7 +21,7 @@ const imageFragment = gql`
   }
 `;
 
-const getImagesForRestaurant = graphql(
+export const getImagesForRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
@@ -55,5 +55,3 @@ const getImagesForRestaurant = graphql(
     }
   }
 );
-
-export {fileFragment, imageFragment, getImagesForRestaurant};

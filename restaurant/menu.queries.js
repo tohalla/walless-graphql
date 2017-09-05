@@ -7,7 +7,7 @@ import {
   formatMenuItem
 } from 'walless-graphql/restaurant/menuItem.queries';
 
-const menuFragment = gql`
+export const menuFragment = gql`
   fragment menuInfo on Menu {
     nodeId
     id
@@ -32,7 +32,7 @@ const menuFragment = gql`
   ${menuItemFragment}
 `;
 
-const formatMenu = (menu = {}) => {
+export const formatMenu = (menu = {}) => {
   const {
     menuMenuItemsByMenu = {},
     menuInformationsByMenu = {},
@@ -53,7 +53,7 @@ const formatMenu = (menu = {}) => {
   return Object.assign({}, rest, {menuItems, information});
 };
 
-const getMenu = graphql(
+export const getMenu = graphql(
   gql`
     query menuById($id: Int!) {
       id
@@ -79,7 +79,7 @@ const getMenu = graphql(
   }
 );
 
-const getMenusByRestaurant = graphql(
+export const getMenusByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
@@ -113,5 +113,3 @@ const getMenusByRestaurant = graphql(
     }
   }
 );
-
-export {menuFragment, getMenu, formatMenu, getMenusByRestaurant};

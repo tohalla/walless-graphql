@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 
 import {get} from 'lodash/fp';
 
-const currencyFragment = gql`
+export const currencyFragment = gql`
   fragment currencyInfo on Currency {
     nodeId
     code
@@ -13,7 +13,7 @@ const currencyFragment = gql`
   }
 `;
 
-const addressFragment = gql`
+export const addressFragment = gql`
   fragment addressInfo on Address {
     nodeId
     id
@@ -27,7 +27,7 @@ const addressFragment = gql`
   }
 `;
 
-const dietFragment = gql`
+export const dietFragment = gql`
   fragment dietInfo on Diet {
     nodeId
     id
@@ -44,7 +44,7 @@ const dietFragment = gql`
   }
 `;
 
-const formatDiet = (diet = {}) => {
+export const formatDiet = (diet = {}) => {
   const {
     dietI18nsByDiet,
     ...rest
@@ -60,7 +60,7 @@ const formatDiet = (diet = {}) => {
   return Object.assign({}, rest, {i18n});
 };
 
-const getDiets = graphql(
+export const getDiets = graphql(
   gql`
     query allDiets {
       allDiets {
@@ -82,7 +82,7 @@ const getDiets = graphql(
   }
 );
 
-const getCurrencies = graphql(
+export const getCurrencies = graphql(
   gql`
     query allCurrencies {
       allCurrencies {
@@ -102,12 +102,3 @@ const getCurrencies = graphql(
     }
   }
 );
-
-export {
-  addressFragment,
-  getCurrencies,
-  dietFragment,
-  getDiets,
-  formatDiet,
-  currencyFragment
-};

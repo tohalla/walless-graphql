@@ -1,11 +1,10 @@
-// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {pick} from 'lodash/fp';
 
 import {orderFragment} from 'walless-graphql/restaurant/order.queries';
 
-const createOrder = graphql(
+export const createOrder = graphql(
   gql`
   mutation createOrder($input: CreateOrderInput!) {
     createOrder(input: $input) {
@@ -22,7 +21,7 @@ const createOrder = graphql(
   }
 );
 
-const updateOrder = graphql(
+export const updateOrder = graphql(
   gql`
   mutation updateOrder($input: UpdateOrderInput!) {
     updateOrder(input: $input) {
@@ -57,8 +56,3 @@ const updateOrder = graphql(
     })
   }
 );
-
-export {
-  createOrder,
-  updateOrder
-};

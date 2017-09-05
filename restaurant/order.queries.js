@@ -5,7 +5,7 @@ import {accountFragment, formatAccount} from 'walless-graphql/account/account.fr
 import {menuItemFragment, formatMenuItem} from 'walless-graphql/restaurant/menuItem.queries';
 import {get} from 'lodash/fp';
 
-const orderItemFragment = gql`
+export const orderItemFragment = gql`
   fragment orderItemInfo on OrderItem {
     id
     nodeId
@@ -16,7 +16,7 @@ const orderItemFragment = gql`
   ${menuItemFragment}
 `;
 
-const orderFragment = gql`
+export const orderFragment = gql`
   fragment orderInfo on Order {
     id
     nodeId
@@ -44,7 +44,7 @@ const orderFragment = gql`
   ${orderItemFragment}
 `;
 
-const formatOrderItem = (orderItem = {}) => {
+export const formatOrderItem = (orderItem = {}) => {
   const {
     menuItemByMenuItem: menuItem,
     ...rest
@@ -56,7 +56,7 @@ const formatOrderItem = (orderItem = {}) => {
   );
 };
 
-const formatOrder = (order = {}) => {
+export const formatOrder = (order = {}) => {
   const {
     accountByCreatedBy: createdBy,
     orderItemsByOrder: {nodes = []},
@@ -74,7 +74,7 @@ const formatOrder = (order = {}) => {
   );
 };
 
-const getOrder = graphql(
+export const getOrder = graphql(
   gql`
     query orderById($id: Int!) {
       orderById(id: $id) {
@@ -95,7 +95,7 @@ const getOrder = graphql(
   }
 );
 
-const getOrdersByRestaurant = graphql(
+export const getOrdersByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
@@ -130,7 +130,7 @@ const getOrdersByRestaurant = graphql(
 );
 
 
-const getOrdersByAccount = graphql(
+export const getOrdersByAccount = graphql(
   gql`
     query accountById($id: Int!) {
       accountById(id: $id) {
@@ -163,13 +163,3 @@ const getOrdersByAccount = graphql(
     }
   }
 );
-
-export {
-  orderFragment,
-  formatOrder,
-  getOrder,
-  orderItemFragment,
-  formatOrderItem,
-  getOrdersByRestaurant,
-  getOrdersByAccount
-};

@@ -1,4 +1,3 @@
-// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {omit} from 'lodash/fp';
@@ -7,7 +6,7 @@ import {
   servingLocationFragment
 } from 'walless-graphql/restaurant/servingLocation.queries';
 
-const createServingLocation = graphql(
+export const createServingLocation = graphql(
   gql`
   mutation createServingLocation($input: CreateServingLocationInput!) {
     createServingLocation(input: $input) {
@@ -26,7 +25,7 @@ const createServingLocation = graphql(
   }
 );
 
-const updateServingLocation = graphql(
+export const updateServingLocation = graphql(
   gql`
   mutation updateServingLocation($input: UpdateServingLocationInput!) {
     updateServingLocation(input: $input) {
@@ -38,15 +37,9 @@ const updateServingLocation = graphql(
   ${servingLocationFragment}
   `, {
     props: ({mutate}) => ({
-      updateServingLocation: (servingLocation: {id: Number}) => mutate({variables: {
+      updateServingLocation: (servingLocation) => mutate({variables: {
         input: {servingLocation: omit(['__typename', 'nodeId'])(servingLocation)}
       }})
     })
   }
 );
-
-
-export {
-  createServingLocation,
-  updateServingLocation
-};

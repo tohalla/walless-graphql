@@ -1,11 +1,10 @@
-// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {pick} from 'lodash/fp';
 
 import {addressFragment} from 'walless-graphql/misc.queries';
 
-const createAddress = graphql(
+export const createAddress = graphql(
   gql`
   mutation createAddress($input: CreateAddressInput!) {
     createAddress(input: $input) {
@@ -36,7 +35,3 @@ const createAddress = graphql(
     })
   }
 );
-
-export {
-  createAddress
-};

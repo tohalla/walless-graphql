@@ -7,7 +7,7 @@ import {
   formatAccount
 } from 'walless-graphql/account/account.fragments';
 
-const servingLocationFragment = gql`
+export const servingLocationFragment = gql`
   fragment servingLocationInfo on ServingLocation {
     nodeId
     id
@@ -26,7 +26,7 @@ const servingLocationFragment = gql`
   ${accountFragment}
 `;
 
-const formatServingLocation = (servingLocation = {}) => {
+export const formatServingLocation = (servingLocation = {}) => {
   const {
     servingLocationAccountsByServingLocation = {},
     ...rest
@@ -38,7 +38,7 @@ const formatServingLocation = (servingLocation = {}) => {
   return Object.assign({}, rest, {accounts});
 };
 
-const getServingLocation = graphql(
+export const getServingLocation = graphql(
   gql`
     query servingLocationById($id: Int!) {
       servingLocationById(id: $id) {
@@ -63,7 +63,7 @@ const getServingLocation = graphql(
   }
 );
 
-const getServingLocationsByRestaurant = graphql(
+export const getServingLocationsByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
@@ -98,9 +98,3 @@ const getServingLocationsByRestaurant = graphql(
   }
 );
 
-export {
-  servingLocationFragment,
-  formatServingLocation,
-  getServingLocation,
-  getServingLocationsByRestaurant
-};

@@ -1,11 +1,10 @@
-// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {omit, get} from 'lodash/fp';
 
 import {menuItemFragment} from 'walless-graphql/restaurant/menuItem.queries';
 
-const createMenuItem = graphql(
+export const createMenuItem = graphql(
   gql`
   mutation createMenuItem($menuItem: CreateMenuItemInput!) {
     createMenuItem(input: $menuItem) {
@@ -24,7 +23,7 @@ const createMenuItem = graphql(
   }
 );
 
-const updateMenuItem = graphql(
+export const updateMenuItem = graphql(
   gql`
   mutation updateMenuItem($input: UpdateMenuItemInput!) {
     updateMenuItem(input: $input) {
@@ -36,14 +35,14 @@ const updateMenuItem = graphql(
   ${menuItemFragment}
   `, {
     props: ({mutate}) => ({
-      updateMenuItem: (menuItem: {id: Number}) => mutate({variables: {
+      updateMenuItem: (menuItem) => mutate({variables: {
         input: {menuItem: omit(['__typename', 'nodeId'])(menuItem)}
       }})
     })
   }
 );
 
-const deleteMenuItem = graphql(
+export const deleteMenuItem = graphql(
   gql`
   mutation deleteMenuItem($input: DeleteMenuItemInput!) {
     deleteMenuItem(input: $input) {
@@ -60,7 +59,7 @@ const deleteMenuItem = graphql(
 );
 
 
-const createMenuItemInformation = graphql(
+export const createMenuItemInformation = graphql(
   gql`
   mutation createMenuItemInformation($input: CreateMenuItemInformationInput!) {
     createMenuItemInformation(input: $input) {
@@ -69,7 +68,7 @@ const createMenuItemInformation = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      createMenuItemInformation: (menuItemInformationItems: Object[] | Object) => {
+      createMenuItemInformation: (menuItemInformationItems) => {
         (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
           .forEach(menuItemInformation =>
             mutate({
@@ -83,7 +82,7 @@ const createMenuItemInformation = graphql(
   }
 );
 
-const updateMenuItemInformation = graphql(
+export const updateMenuItemInformation = graphql(
   gql`
   mutation updateMenuItemInformation($input: UpdateMenuItemInformationInput!) {
     updateMenuItemInformation(input: $input) {
@@ -92,7 +91,7 @@ const updateMenuItemInformation = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItemInformation: (menuItemInformationItems: Object[] | Object) =>
+      updateMenuItemInformation: (menuItemInformationItems) =>
         (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
           .forEach(menuItemInformation =>
             mutate({variables: {
@@ -105,7 +104,7 @@ const updateMenuItemInformation = graphql(
   }
 );
 
-const updateMenuItemImages = graphql(
+export const updateMenuItemImages = graphql(
   gql`
   mutation updateMenuItemImages($input: UpdateMenuItemImagesInput!) {
     updateMenuItemImages(input: $input) {
@@ -114,7 +113,7 @@ const updateMenuItemImages = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItemImages: (menuItem: Number, images: Number[]) => mutate({
+      updateMenuItemImages: (menuItem, images) => mutate({
         variables: {
           input: {menuItem, images}
         }
@@ -123,7 +122,7 @@ const updateMenuItemImages = graphql(
   }
 );
 
-const updateMenuItemDiets = graphql(
+export const updateMenuItemDiets = graphql(
   gql`
   mutation updateMenuItemDiets($input: UpdateMenuItemDietsInput!) {
     updateMenuItemDiets(input: $input) {
@@ -132,7 +131,7 @@ const updateMenuItemDiets = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItemDiets: (menuItem: Number, diets: Number[]) => mutate({
+      updateMenuItemDiets: (menuItem, diets) => mutate({
         variables: {
           input: {menuItem, diets}
         }
@@ -141,7 +140,7 @@ const updateMenuItemDiets = graphql(
   }
 );
 
-const updateMenuItemIngredients = graphql(
+export const updateMenuItemIngredients = graphql(
   gql`
   mutation updateMenuItemIngredients($input: UpdateMenuItemIngredientsInput!) {
     updateMenuItemIngredients(input: $input) {
@@ -159,13 +158,3 @@ const updateMenuItemIngredients = graphql(
   }
 );
 
-export {
-  createMenuItem,
-  updateMenuItem,
-  deleteMenuItem,
-  updateMenuItemImages,
-  updateMenuItemDiets,
-  createMenuItemInformation,
-  updateMenuItemInformation,
-  updateMenuItemIngredients
-};

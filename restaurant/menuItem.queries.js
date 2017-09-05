@@ -9,7 +9,7 @@ import {
   formatDiet
 } from 'walless-graphql/misc.queries';
 
-const menuItemTypeFragment = gql`
+export const menuItemTypeFragment = gql`
   fragment menuItemTypeInfo on MenuItemType {
     nodeId
     id
@@ -18,7 +18,7 @@ const menuItemTypeFragment = gql`
   }
 `;
 
-const menuItemCategoryFragment = gql`
+export const menuItemCategoryFragment = gql`
   fragment menuItemCategoryInfo on MenuItemCategory {
     nodeId
     id
@@ -27,7 +27,7 @@ const menuItemCategoryFragment = gql`
   }
 `;
 
-const formatMenuItemCategory = (menuItemCategory = {}) => {
+export const formatMenuItemCategory = (menuItemCategory = {}) => {
   const {
     menuItemTypeByType,
     ...rest
@@ -39,7 +39,7 @@ const formatMenuItemCategory = (menuItemCategory = {}) => {
   );
 };
 
-const menuItemFragment = gql`
+export const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {
     id
     nodeId
@@ -88,7 +88,7 @@ const menuItemFragment = gql`
   ${menuItemCategoryFragment}
 `;
 
-const formatMenuItem = (menuItem = {}) => {
+export const formatMenuItem = (menuItem = {}) => {
   const {
     menuItemImagesByMenuItem = {},
     menuItemDietsByMenuItem = {},
@@ -124,7 +124,7 @@ const formatMenuItem = (menuItem = {}) => {
   );
 };
 
-const formatMenuItemType = (menuItemType = {}) => {
+export const formatMenuItemType = (menuItemType = {}) => {
   const {
     menuItemCategoriesByType,
     ...rest
@@ -136,7 +136,7 @@ const formatMenuItemType = (menuItemType = {}) => {
   );
 };
 
-const getMenuItem = graphql(
+export const getMenuItem = graphql(
   gql`
     query menuItemById($id: Int!) {
       menuItemById(id: $id) {
@@ -161,7 +161,7 @@ const getMenuItem = graphql(
   }
 );
 
-const getMenuItemTypes = graphql(
+export const getMenuItemTypes = graphql(
   gql`
     query allMenuItemTypes {
       allMenuItemTypes {
@@ -189,7 +189,7 @@ const getMenuItemTypes = graphql(
   }
 );
 
-const getMenuItemsByRestaurant = graphql(
+export const getMenuItemsByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
@@ -223,11 +223,3 @@ const getMenuItemsByRestaurant = graphql(
     }
   }
 );
-
-export {
-  menuItemFragment,
-  getMenuItem,
-  formatMenuItem,
-  getMenuItemTypes,
-  getMenuItemsByRestaurant
-};

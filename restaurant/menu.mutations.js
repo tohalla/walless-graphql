@@ -1,11 +1,10 @@
-// @flow
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {omit, get} from 'lodash/fp';
 
 import {menuFragment} from 'walless-graphql/restaurant/menu.queries';
 
-const createMenu = graphql(
+export const createMenu = graphql(
   gql`
   mutation createMenu($input: CreateMenuInput!) {
     createMenu(input: $input) {
@@ -22,7 +21,7 @@ const createMenu = graphql(
   }
 );
 
-const updateMenu = graphql(
+export const updateMenu = graphql(
   gql`
   mutation updateMenu($input: UpdateMenuInput!) {
     updateMenu(input: $input) {
@@ -41,7 +40,7 @@ const updateMenu = graphql(
   }
 );
 
-const deleteMenu = graphql(
+export const deleteMenu = graphql(
   gql`
   mutation deleteMenu($input: DeleteMenuInput!) {
     deleteMenu(input: $input) {
@@ -57,7 +56,7 @@ const deleteMenu = graphql(
   }
 );
 
-const createMenuInformation = graphql(
+export const createMenuInformation = graphql(
   gql`
   mutation createMenuInformation($input: CreateMenuInformationInput!) {
     createMenuInformation(input: $input) {
@@ -66,7 +65,7 @@ const createMenuInformation = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      createMenuInformation: (menuInformationItems: Object[] | Object) => {
+      createMenuInformation: (menuInformationItems) => {
         (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
           .forEach(menuInformation =>
             mutate({
@@ -80,7 +79,7 @@ const createMenuInformation = graphql(
   }
 );
 
-const updateMenuInformation = graphql(
+export const updateMenuInformation = graphql(
   gql`
   mutation updateMenuInformation($input: UpdateMenuInformationInput!) {
     updateMenuInformation(input: $input) {
@@ -89,7 +88,7 @@ const updateMenuInformation = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuInformation: (menuInformationItems: Object[] | Object) =>
+      updateMenuInformation: (menuInformationItems) =>
         (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
           .forEach(menuInformation =>
             mutate({variables: {
@@ -102,7 +101,7 @@ const updateMenuInformation = graphql(
   }
 );
 
-const updateMenuItems = graphql(
+export const updateMenuItems = graphql(
   gql`
   mutation updateMenuItems($input: UpdateMenuItemsInput!) {
     updateMenuItems(input: $input) {
@@ -111,7 +110,7 @@ const updateMenuItems = graphql(
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItems: (menu: Number, menuItems: Number[]) => mutate({
+      updateMenuItems: (menu, menuItems) => mutate({
         variables: {
           input: {menu, menuItems}
         }
@@ -120,11 +119,3 @@ const updateMenuItems = graphql(
   }
 );
 
-export {
-  createMenu,
-  updateMenu,
-  deleteMenu,
-  updateMenuItems,
-  createMenuInformation,
-  updateMenuInformation
-};

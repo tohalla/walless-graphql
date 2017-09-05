@@ -11,7 +11,7 @@ import {
   accountFragment
 } from 'walless-graphql/account/account.fragments';
 
-const getActiveAccount = graphql(
+export const getActiveAccount = graphql(
   gql`
     query {
       getActiveAccount {
@@ -30,7 +30,7 @@ const getActiveAccount = graphql(
   }
 );
 
-const getRestaurantsByAccount = graphql(
+export const getRestaurantsByAccount = graphql(
   gql`
     query accountById($id: Int!) {
       accountById(id: $id) {
@@ -66,7 +66,7 @@ const getRestaurantsByAccount = graphql(
   }
 );
 
-const getAccountsByRestaurant = graphql(
+export const getAccountsByRestaurant = graphql(
   gql`
     query accountsByRestaurant($id: Int!) {
       restaurantById(id: $id) {
@@ -113,7 +113,7 @@ const getAccountsByRestaurant = graphql(
   }
 );
 
-const getAccountRolesForRestaurant = graphql(
+export const getAccountRolesForRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
@@ -149,10 +149,3 @@ const getAccountRolesForRestaurant = graphql(
     }
   }
 );
-export {
-  getActiveAccount,
-  getAccountsByRestaurant,
-  formatAccount,
-  getRestaurantsByAccount,
-  getAccountRolesForRestaurant
-};
