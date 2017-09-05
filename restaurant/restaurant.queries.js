@@ -27,6 +27,7 @@ const restaurantFragment = gql`
         language
         name
         description
+        nodeId
       }
     }
   }
