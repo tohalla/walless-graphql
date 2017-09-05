@@ -22,15 +22,18 @@ export const orderFragment = gql`
     nodeId
     createdAt
     completed
+    updatedAt
     accepted
     declined
     paid
     message
+    servingLocation
     servingLocationByServingLocation {
       id
       name
     }
     restaurant
+    createdBy
     accountByCreatedBy {
       ...accountInfo
     }
