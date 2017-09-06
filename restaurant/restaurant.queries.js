@@ -4,8 +4,8 @@ import gql from 'graphql-tag';
 import {addressFragment, currencyFragment} from 'walless-graphql/misc.queries';
 import {imageFragment} from 'walless-graphql/file.queries';
 
-export const restaurantInformationFragment = gql`
-  fragment restaurantInformationInfo on RestaurantInformation {
+export const restaurantI18nFragment = gql`
+  fragment restaurantI18nInfo on RestaurantI18n {
     language
     name
     description
@@ -32,31 +32,31 @@ export const restaurantFragment = gql`
     currencyByCurrency {
       ...currencyInfo
     }
-    restaurantInformationsByRestaurant {
+    restaurantI18nsByRestaurant {
       nodes {
-        ...restaurantInformationInfo
+        ...restaurantI18nInfo
       }
     }
   }
   ${currencyFragment}
   ${imageFragment}
   ${addressFragment}
-  ${restaurantInformationFragment}
+  ${restaurantI18nFragment}
 `;
 
 export const formatRestaurant = (restaurant = {}) => {
   const {
-    restaurantInformationsByRestaurant = {},
+    restaurantI18nsByRestaurant = {},
     currencyByCurrency: currency,
     restaurantImagesByRestaurant = {},
     addressByAddress: address,
     ...rest
   } = restaurant;
-  const information = Array.isArray(restaurantInformationsByRestaurant.nodes) ?
-    restaurantInformationsByRestaurant.nodes.reduce(
+  const i18n = Array.isArray(restaurantI18nsByRestaurant.nodes) ?
+    restaurantI18nsByRestaurant.nodes.reduce(
       (prev, val) => {
-        const {language, ...restInformation} = val;
-        return Object.assign({}, prev, {[language]: restInformation});
+        const {language, ...restI18n} = val;
+        return Object.assign({}, prev, {[language]: restI18n});
       },
       {}
     ) : [];
@@ -66,7 +66,7 @@ export const formatRestaurant = (restaurant = {}) => {
     {},
     rest,
     {
-      information,
+      i18n,
       currency,
       images,
       address

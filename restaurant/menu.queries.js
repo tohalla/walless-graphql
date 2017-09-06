@@ -11,7 +11,7 @@ export const menuFragment = gql`
   fragment menuInfo on Menu {
     nodeId
     id
-    menuInformationsByMenu {
+    menuI18nsByMenu {
       nodes {
         nodeId
         language
@@ -35,22 +35,22 @@ export const menuFragment = gql`
 export const formatMenu = (menu = {}) => {
   const {
     menuMenuItemsByMenu = {},
-    menuInformationsByMenu = {},
+    menuI18nsByMenu = {},
     ...rest
   } = menu;
   const menuItems = Array.isArray(menuMenuItemsByMenu.edges) ?
     menuMenuItemsByMenu.edges.map(edge =>
       formatMenuItem(edge.node.menuItemByMenuItem)
     ) : [];
-  const information = Array.isArray(menuInformationsByMenu.nodes) ?
-    menuInformationsByMenu.nodes.reduce(
+  const i18n = Array.isArray(menuI18nsByMenu.nodes) ?
+    menuI18nsByMenu.nodes.reduce(
       (prev, val) => {
-        const {language, ...restInformation} = val;
-        return Object.assign({}, prev, {[language]: restInformation});
+        const {language, ...restI18n} = val;
+        return Object.assign({}, prev, {[language]: restI18n});
       },
       {}
     ) : [];
-  return Object.assign({}, rest, {menuItems, information});
+  return Object.assign({}, rest, {menuItems, i18n});
 };
 
 export const getMenu = graphql(

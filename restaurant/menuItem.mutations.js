@@ -59,21 +59,21 @@ export const deleteMenuItem = graphql(
 );
 
 
-export const createMenuItemInformation = graphql(
+export const createMenuItemI18n = graphql(
   gql`
-  mutation createMenuItemInformation($input: CreateMenuItemInformationInput!) {
-    createMenuItemInformation(input: $input) {
+  mutation createMenuItemI18n($input: CreateMenuItemI18nInput!) {
+    createMenuItemI18n(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      createMenuItemInformation: (menuItemInformationItems) => {
-        (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
-          .forEach(menuItemInformation =>
+      createMenuItemI18n: (menuItemI18nItems) => {
+        (Array.isArray(menuItemI18nItems) ? menuItemI18nItems : [menuItemI18nItems])
+          .forEach(menuItemI18n =>
             mutate({
               variables: {
-                input: {menuItemInformation}
+                input: {menuItemI18n}
               }
             })
           );
@@ -82,21 +82,21 @@ export const createMenuItemInformation = graphql(
   }
 );
 
-export const updateMenuItemInformation = graphql(
+export const updateMenuItemI18n = graphql(
   gql`
-  mutation updateMenuItemInformation($input: UpdateMenuItemInformationInput!) {
-    updateMenuItemInformation(input: $input) {
+  mutation updateMenuItemI18n($input: UpdateMenuItemI18nInput!) {
+    updateMenuItemI18n(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItemInformation: (menuItemInformationItems) =>
-        (Array.isArray(menuItemInformationItems) ? menuItemInformationItems : [menuItemInformationItems])
-          .forEach(menuItemInformation =>
+      updateMenuItemI18n: (menuItemI18nItems) =>
+        (Array.isArray(menuItemI18nItems) ? menuItemI18nItems : [menuItemI18nItems])
+          .forEach(menuItemI18n =>
             mutate({variables: {
               input: {
-                menuItemInformation: omit(['__typename', 'nodeId'])(menuItemInformation)
+                menuItemI18n: omit(['__typename', 'nodeId'])(menuItemI18n)
               }
             }})
           )

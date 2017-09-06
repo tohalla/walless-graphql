@@ -56,21 +56,21 @@ export const deleteMenu = graphql(
   }
 );
 
-export const createMenuInformation = graphql(
+export const createMenuI18n = graphql(
   gql`
-  mutation createMenuInformation($input: CreateMenuInformationInput!) {
-    createMenuInformation(input: $input) {
+  mutation createMenuI18n($input: CreateMenuI18nInput!) {
+    createMenuI18n(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      createMenuInformation: (menuInformationItems) => {
-        (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
-          .forEach(menuInformation =>
+      createMenuI18n: (menuI18nItems) => {
+        (Array.isArray(menuI18nItems) ? menuI18nItems : [menuI18nItems])
+          .forEach(menuI18n =>
             mutate({
               variables: {
-                input: {menuInformation}
+                input: {menuI18n}
               }
             })
           );
@@ -79,21 +79,21 @@ export const createMenuInformation = graphql(
   }
 );
 
-export const updateMenuInformation = graphql(
+export const updateMenuI18n = graphql(
   gql`
-  mutation updateMenuInformation($input: UpdateMenuInformationInput!) {
-    updateMenuInformation(input: $input) {
+  mutation updateMenuI18n($input: UpdateMenuI18nInput!) {
+    updateMenuI18n(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuInformation: (menuInformationItems) =>
-        (Array.isArray(menuInformationItems) ? menuInformationItems : [menuInformationItems])
-          .forEach(menuInformation =>
+      updateMenuI18n: (menuI18nItems) =>
+        (Array.isArray(menuI18nItems) ? menuI18nItems : [menuI18nItems])
+          .forEach(menuI18n =>
             mutate({variables: {
               input: {
-                menuInformation: omit(['__typename', 'nodeId'])(menuInformation)
+                menuI18n: omit(['__typename', 'nodeId'])(menuI18n)
               }
             }})
           )

@@ -4,7 +4,7 @@ import {omit, set, find, get} from 'lodash/fp';
 
 import {
   restaurantFragment,
-  restaurantInformationFragment,
+  restaurantI18nFragment,
   getRestaurantQuery
 } from 'walless-graphql/restaurant/restaurant.queries';
 import {imageFragment} from 'walless-graphql/file.queries';
@@ -27,47 +27,47 @@ export const createRestaurant = graphql(
   }
 );
 
-export const createRestaurantInformation = graphql(
+export const createRestaurantI18n = graphql(
   gql`
-    mutation createRestaurantInformation($input: CreateRestaurantInformationInput!) {
-      createRestaurantInformation(input: $input) {
-        restaurantInformation {
-          ...restaurantInformationInfo
+    mutation createRestaurantI18n($input: CreateRestaurantI18nInput!) {
+      createRestaurantI18n(input: $input) {
+        restaurantI18n {
+          ...restaurantI18nInfo
         }
       }
     }
-    ${restaurantInformationFragment}
+    ${restaurantI18nFragment}
   `, {
     props: ({mutate}) => ({
-      createRestaurantInformation: (items) => {
+      createRestaurantI18n: (items) => {
         (Array.isArray(items) ? items : [items])
-          .forEach(restaurantInformation =>
+          .forEach(restaurantI18n =>
             mutate({
               variables: {
-                input: {restaurantInformation}
+                input: {restaurantI18n}
               },
               update: (
                 store,
-                {data: {createRestaurantInformation: {restaurantInformation}}}
+                {data: {createRestaurantI18n: {restaurantI18n}}}
               ) => {
                 const oldRestaurant = store.readQuery({
                   query: getRestaurantQuery,
-                  variables: {id: restaurantInformation.restaurant}
+                  variables: {id: restaurantI18n.restaurant}
                 });
                 const oldI18n = get([
                   'restaurantById',
-                  'restaurantInformationsByRestaurant',
+                  'restaurantI18nsByRestaurant',
                   'nodes'
                 ])(oldRestaurant);
                 // should push translation to i18n, if it doesn't already exists
-                if (!find(i => i.language === restaurantInformation.language)(oldI18n)) {
+                if (!find(i => i.language === restaurantI18n.language)(oldI18n)) {
                   store.writeQuery({
                     query: getRestaurantQuery,
                     data: set([
                       'restaurantById',
-                      'restaurantInformationsByRestaurant',
+                      'restaurantI18nsByRestaurant',
                       'nodes'
-                    ])(oldI18n.concat(restaurantInformation))(oldRestaurant)
+                    ])(oldI18n.concat(restaurantI18n))(oldRestaurant)
                   });
                 }
               }
@@ -78,34 +78,34 @@ export const createRestaurantInformation = graphql(
   }
 );
 
-export const updateRestaurantInformation = graphql(
+export const updateRestaurantI18n = graphql(
   gql`
-    mutation updateRestaurantInformation($input: UpdateRestaurantInformationInput!) {
-      updateRestaurantInformation(input: $input) {
-        restaurantInformation {
-          ...restaurantInformationInfo
+    mutation updateRestaurantI18n($input: UpdateRestaurantI18nInput!) {
+      updateRestaurantI18n(input: $input) {
+        restaurantI18n {
+          ...restaurantI18nInfo
         }
       }
     }
-    ${restaurantInformationFragment}
+    ${restaurantI18nFragment}
   `, {
     props: ({mutate}) => ({
-      updateRestaurantInformation: (items) =>
+      updateRestaurantI18n: (items) =>
         (Array.isArray(items) ? items : [items])
-          .forEach(restaurantInformation =>
+          .forEach(restaurantI18n =>
             mutate({
               variables: {
                 input: {
-                  restaurantInformation: omit(['__typename', 'nodeId'])(restaurantInformation)
+                  restaurantI18n: omit(['__typename', 'nodeId'])(restaurantI18n)
                 }
               },
               update: (
                 store,
-                {data: {updateRestaurantInformation: {restaurantInformation}}}
+                {data: {updateRestaurantI18n: {restaurantI18n}}}
               ) => store.writeFragment({
-                fragment: restaurantInformationFragment,
-                id: dataIdFromObject(restaurantInformation),
-                data: restaurantInformation
+                fragment: restaurantI18nFragment,
+                id: dataIdFromObject(restaurantI18n),
+                data: restaurantI18n
               })
             })
           )

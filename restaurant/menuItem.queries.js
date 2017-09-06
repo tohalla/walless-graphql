@@ -56,7 +56,7 @@ export const menuItemFragment = gql`
     currencyByCurrency {
       ...currencyInfo
     }
-    menuItemInformationsByMenuItem {
+    menuItemI18nsByMenuItem {
       nodes {
         nodeId
         language
@@ -92,7 +92,7 @@ export const formatMenuItem = (menuItem = {}) => {
   const {
     menuItemImagesByMenuItem = {},
     menuItemDietsByMenuItem = {},
-    menuItemInformationsByMenuItem = {},
+    menuItemI18nsByMenuItem = {},
     menuItemCategoryByCategory = {},
     menuItemTypeByType = {},
     currencyByCurrency: currency,
@@ -102,11 +102,11 @@ export const formatMenuItem = (menuItem = {}) => {
     menuItemImagesByMenuItem.edges.map(edge => edge.node.imageByImage) : [];
   const diets = Array.isArray(menuItemDietsByMenuItem.nodes) ?
     menuItemDietsByMenuItem.nodes.map(node => formatDiet(node.dietByDiet)) : [];
-  const information = Array.isArray(menuItemInformationsByMenuItem.nodes) ?
-    menuItemInformationsByMenuItem.nodes.reduce(
+  const i18n = Array.isArray(menuItemI18nsByMenuItem.nodes) ?
+    menuItemI18nsByMenuItem.nodes.reduce(
       (prev, val) => {
-        const {language, ...restInformation} = val;
-        return Object.assign({}, prev, {[language]: restInformation});
+        const {language, ...restI18n} = val;
+        return Object.assign({}, prev, {[language]: restI18n});
       },
       {}
     ) : [];
@@ -115,7 +115,7 @@ export const formatMenuItem = (menuItem = {}) => {
     rest,
     {
       images,
-      information,
+      i18n,
       currency,
       diets,
       menuItemCategory: formatMenuItemCategory(menuItemCategoryByCategory || {}),
