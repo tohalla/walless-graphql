@@ -10,6 +10,7 @@ export const restaurantInformationFragment = gql`
     name
     description
     nodeId
+    restaurant
   }
 `;
 

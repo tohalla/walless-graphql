@@ -1,6 +1,6 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {omit, set} from 'lodash/fp';
+import {omit, set, find, get} from 'lodash/fp';
 
 import {
   restaurantFragment,
@@ -31,9 +31,12 @@ export const createRestaurantInformation = graphql(
   gql`
     mutation createRestaurantInformation($input: CreateRestaurantInformationInput!) {
       createRestaurantInformation(input: $input) {
-        clientMutationId
+        restaurantInformation {
+          ...restaurantInformationInfo
+        }
       }
     }
+    ${restaurantInformationFragment}
   `, {
     props: ({mutate}) => ({
       createRestaurantInformation: (items) => {
@@ -42,6 +45,31 @@ export const createRestaurantInformation = graphql(
             mutate({
               variables: {
                 input: {restaurantInformation}
+              },
+              update: (
+                store,
+                {data: {createRestaurantInformation: {restaurantInformation}}}
+              ) => {
+                const oldRestaurant = store.readQuery({
+                  query: getRestaurantQuery,
+                  variables: {id: restaurantInformation.restaurant}
+                });
+                const oldI18n = get([
+                  'restaurantById',
+                  'restaurantInformationsByRestaurant',
+                  'nodes'
+                ])(oldRestaurant);
+                // should push translation to i18n, if it doesn't already exists
+                if (!find(i => i.language === restaurantInformation.language)(oldI18n)) {
+                  store.writeQuery({
+                    query: getRestaurantQuery,
+                    data: set([
+                      'restaurantById',
+                      'restaurantInformationsByRestaurant',
+                      'nodes'
+                    ])(oldI18n.concat(restaurantInformation))(oldRestaurant)
+                  });
+                }
               }
             })
           );
