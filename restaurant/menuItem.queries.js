@@ -11,7 +11,6 @@ import {
 
 export const menuItemTypeFragment = gql`
   fragment menuItemTypeInfo on MenuItemType {
-    nodeId
     id
     name
     description
@@ -20,7 +19,6 @@ export const menuItemTypeFragment = gql`
 
 export const menuItemCategoryFragment = gql`
   fragment menuItemCategoryInfo on MenuItemCategory {
-    nodeId
     id
     name
     description
@@ -42,7 +40,6 @@ export const formatMenuItemCategory = (menuItemCategory = {}) => {
 export const menuItemFragment = gql`
   fragment menuItemInfo on MenuItem {
     id
-    nodeId
     restaurant
     createdAt
     createdBy
@@ -193,7 +190,7 @@ export const getMenuItemsByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         menuItemsByRestaurant {
           edges {
             node {

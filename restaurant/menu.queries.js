@@ -9,7 +9,6 @@ import {
 
 export const menuFragment = gql`
   fragment menuInfo on Menu {
-    nodeId
     id
     menuI18nsByMenu {
       nodes {
@@ -83,7 +82,7 @@ export const getMenusByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         menusByRestaurant {
           edges {
             node {

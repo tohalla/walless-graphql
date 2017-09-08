@@ -9,7 +9,6 @@ import {
 
 export const servingLocationFragment = gql`
   fragment servingLocationInfo on ServingLocation {
-    nodeId
     id
     name
     enabled
@@ -67,7 +66,7 @@ export const getServingLocationsByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         servingLocationsByRestaurant {
           edges {
             node {

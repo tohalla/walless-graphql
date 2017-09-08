@@ -17,7 +17,6 @@ export const restaurantI18nFragment = gql`
 export const restaurantFragment = gql`
   fragment restaurantInfo on Restaurant {
     id
-    nodeId
     createdBy
     addressByAddress {
       ...addressInfo

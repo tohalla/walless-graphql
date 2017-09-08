@@ -70,7 +70,7 @@ export const getAccountsByRestaurant = graphql(
   gql`
     query accountsByRestaurant($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         restaurantAccountsByRestaurant {
           edges {
             node {
@@ -117,7 +117,7 @@ export const getAccountRolesForRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         accountRolesForRestaurant {
           edges {
             node {

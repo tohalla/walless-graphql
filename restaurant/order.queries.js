@@ -8,7 +8,6 @@ import {get} from 'lodash/fp';
 export const orderItemFragment = gql`
   fragment orderItemInfo on OrderItem {
     id
-    nodeId
     menuItemByMenuItem {
       ...menuItemInfo
     }
@@ -19,7 +18,6 @@ export const orderItemFragment = gql`
 export const orderFragment = gql`
   fragment orderInfo on Order {
     id
-    nodeId
     createdAt
     completed
     updatedAt
@@ -102,7 +100,7 @@ export const getOrdersByRestaurant = graphql(
   gql`
     query restaurantById($id: Int!) {
       restaurantById(id: $id) {
-        nodeId
+        id
         ordersByRestaurant {
           edges {
             node {
@@ -137,7 +135,7 @@ export const getOrdersByAccount = graphql(
   gql`
     query accountById($id: Int!) {
       accountById(id: $id) {
-        nodeId
+        id
         ordersByCreatedBy {
           edges {
             node {

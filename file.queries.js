@@ -4,7 +4,6 @@ import {get} from 'lodash/fp';
 
 export const fileFragment = gql`
   fragment fileInfo on File {
-    nodeId
     id
     uri
     key
@@ -13,7 +12,6 @@ export const fileFragment = gql`
 
 export const imageFragment = gql`
   fragment imageInfo on Image {
-    nodeId
     id
     uri
     key

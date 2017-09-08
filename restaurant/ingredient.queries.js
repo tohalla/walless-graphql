@@ -5,7 +5,6 @@ import {get} from 'lodash/fp';
 
 export const ingredientFragment = gql`
   fragment ingredientInfo on Ingredient {
-    nodeId
     id
     ingredientI18nsByIngredient {
       nodes {

@@ -6,7 +6,6 @@ const formatAccount = (account = {}) => {
 
 const accountFragment = gql`
   fragment accountInfo on Account {
-    nodeId
     id
     firstName
     lastName
@@ -18,7 +17,6 @@ const accountFragment = gql`
 const roleRightsFragment = gql`
   fragment roleRightsInfo on RestaurantRoleRight {
     id
-    nodeId
     allowAddPromotion
     allowAlterPromotion
     allowDeletePromotion

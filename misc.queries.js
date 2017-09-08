@@ -15,7 +15,6 @@ export const currencyFragment = gql`
 
 export const addressFragment = gql`
   fragment addressInfo on Address {
-    nodeId
     id
     route
     streetNumber
@@ -29,7 +28,6 @@ export const addressFragment = gql`
 
 export const dietFragment = gql`
   fragment dietInfo on Diet {
-    nodeId
     id
     color
     dietI18nsByDiet {
