@@ -6,20 +6,17 @@ import {pascalize, camelizeKeys} from 'humps';
 import {dataIdFromObject} from 'walless-graphql/util';
 
 export default async(
-  {url, wsToken, client}: {
+  {url, wsToken, client, headers: extraHeaders}: {
     url: string,
-    client: {writeFragment: () => void},
-    wsToken: string | () => Promise<any>
+    client: {writeFragment: any, readFragment: any},
+    headers: any
   },
-  callback: () => void
+  callback: any
 ) => {
-  const token = typeof wsToken === 'string' ? wsToken
-    : wsToken && typeof wsToken.then === 'function' ? await wsToken()
-    : undefined;
   const socket = io(url, {
     transportOptions: {
       polling: {
-        extraHeaders: {token}
+        extraHeaders
       }
     }
   });
