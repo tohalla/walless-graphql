@@ -89,8 +89,9 @@ export const getServingLocationsByRestaurant = graphql(
     props: ({ownProps, data}) => {
       const {restaurantById, ...getServingLocationsByRestaurant} = data;
       return {
-        servingLocations: (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
-          .map(edge => formatServingLocation(edge.node)),
+        servingLocations: getServingLocationsByRestaurant.loading ? [] :
+          (get(['servingLocationsByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => formatServingLocation(edge.node)),
         getServingLocationsByRestaurant
       };
     }

@@ -84,12 +84,17 @@ export const getOrder = graphql(
     }
     ${orderFragment}
   `, {
-    skip: ownProps => typeof ownProps.order !== 'number',
-    options: ownProps => ({variables: {id: ownProps.order}}),
+    skip: ownProps => !ownProps.order,
+    options: ownProps => ({
+      variables: {
+        id: typeof ownProps.order === 'number' ?
+          ownProps.order : get(['order', 'id'])(ownProps)
+      }
+    }),
     props: ({ownProps, data}) => {
       const {orderById, ...getOrder} = data;
       return {
-        order: formatOrder(orderById),
+        order: getOrder.loading ? ownProps.order : formatOrder(orderById),
         getOrder
       };
     }
@@ -122,8 +127,9 @@ export const getOrdersByRestaurant = graphql(
     props: ({ownProps, data}) => {
       const {restaurantById, ...getOrdersByRestaurant} = data;
       return {
-        orders: (get(['ordersByRestaurant', 'edges'])(restaurantById) || [])
-          .map(edge => formatOrder(edge.node)),
+        orders: getOrdersByRestaurant.loading ? [] :
+          (get(['ordersByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => formatOrder(edge.node)),
         getOrdersByRestaurant
       };
     }
@@ -157,8 +163,9 @@ export const getOrdersByAccount = graphql(
     props: ({ownProps, data}) => {
       const {accountById, ...getOrdersByAccount} = data;
       return {
-        orders: (get(['ordersByCreatedBy', 'edges'])(accountById) || [])
-          .map(edge => formatOrder(edge.node)),
+        orders: getOrdersByAccount.loading ? [] :
+          (get(['ordersByCreatedBy', 'edges'])(accountById) || [])
+            .map(edge => formatOrder(edge.node)),
         getOrdersByAccount
       };
     }

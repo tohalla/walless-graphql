@@ -90,7 +90,8 @@ export const getRestaurant = graphql(
     props: ({ownProps, data}) => {
       const {restaurantById, ...getRestaurant} = data;
       return {
-        restaurant: formatRestaurant(restaurantById),
+        restaurant: getRestaurant.loading ?
+          ownProps.restaurant : formatRestaurant(restaurantById),
         getRestaurant
       };
     }

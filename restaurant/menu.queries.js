@@ -71,7 +71,8 @@ export const getMenu = graphql(
     props: ({ownProps, data}) => {
       const {menuById, ...getMenu} = data;
       return {
-        menu: formatMenu(menuById),
+        menu: getMenu.loading ?
+          ownProps.menu : formatMenu(menuById),
         getMenu
       };
     }
@@ -105,8 +106,9 @@ export const getMenusByRestaurant = graphql(
     props: ({ownProps, data}) => {
       const {restaurantById, ...getMenusByRestaurant} = data;
       return {
-        menus: (get(['menusByRestaurant', 'edges'])(restaurantById) || [])
-          .map(edge => formatMenu(edge.node)),
+        menus: getMenusByRestaurant.loading ? [] :
+          (get(['menusByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => formatMenu(edge.node)),
         getMenusByRestaurant
       };
     }

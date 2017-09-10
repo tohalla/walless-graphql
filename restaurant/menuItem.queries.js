@@ -151,7 +151,8 @@ export const getMenuItem = graphql(
     props: ({ownProps, data}) => {
       const {menuItemById, ...getMenuItem} = data;
       return {
-        menuItem: formatMenuItem(menuItemById),
+        menuItem: getMenuItem.loading ?
+          ownProps.menuItem : formatMenuItem(menuItemById),
         getMenuItem
       };
     }
@@ -178,8 +179,9 @@ export const getMenuItemTypes = graphql(
     props: ({ownProps, data}) => {
       const {allMenuItemTypes, ...getMenuItemTypes} = data;
       return {
-        menuItemTypes: (get(['nodes'])(allMenuItemTypes) || [])
-          .map(node => formatMenuItemType(node)),
+        menuItemTypes: getMenuItemTypes.loading ? [] :
+          (get(['nodes'])(allMenuItemTypes) || [])
+            .map(node => formatMenuItemType(node)),
         getMenuItemTypes
       };
     }
@@ -213,8 +215,9 @@ export const getMenuItemsByRestaurant = graphql(
     props: ({ownProps, data}) => {
       const {restaurantById, ...getMenuItemsByRestaurant} = data;
       return {
-        menuItems: (get(['menuItemsByRestaurant', 'edges'])(restaurantById) || [])
-          .map(edge => formatMenuItem(edge.node)),
+        menuItems: getMenuItemsByRestaurant.loading ? [] :
+          (get(['menuItemsByRestaurant', 'edges'])(restaurantById) || [])
+            .map(edge => formatMenuItem(edge.node)),
         getMenuItemsByRestaurant
       };
     }
