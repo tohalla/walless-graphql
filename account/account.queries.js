@@ -75,7 +75,7 @@ export const getAccountsByRestaurant = graphql(
           edges {
             node {
               accountRoleByRole {
-                nodeId
+                id
                 name
               }
               accountByAccount {
