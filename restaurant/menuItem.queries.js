@@ -8,6 +8,10 @@ import {
   dietFragment,
   formatDiet
 } from 'walless-graphql/misc.queries';
+import {
+  optionFragment,
+  formatOption
+} from 'walless-graphql/restaurant/option.queries';
 
 export const menuItemTypeFragment = gql`
   fragment menuItemTypeInfo on MenuItemType {
@@ -77,12 +81,21 @@ export const menuItemFragment = gql`
         }
       }
     }
+    menuItemOptionsByMenuItem {
+      nodes {
+        defaultValue
+        optionByOption {
+          ...optionInfo
+        }
+      }
+    }
   }
   ${currencyFragment}
   ${dietFragment}
   ${imageFragment}
   ${menuItemTypeFragment}
   ${menuItemCategoryFragment}
+  ${optionFragment}
 `;
 
 export const formatMenuItem = (menuItem = {}) => {
@@ -92,6 +105,7 @@ export const formatMenuItem = (menuItem = {}) => {
     menuItemI18nsByMenuItem = {},
     menuItemCategoryByCategory = {},
     menuItemTypeByType = {},
+    menuItemOptionsByMenuItem = {},
     currencyByCurrency: currency,
     ...rest
   } = menuItem;
@@ -99,6 +113,10 @@ export const formatMenuItem = (menuItem = {}) => {
     menuItemImagesByMenuItem.edges.map(edge => edge.node.imageByImage) : [];
   const diets = Array.isArray(menuItemDietsByMenuItem.nodes) ?
     menuItemDietsByMenuItem.nodes.map(node => formatDiet(node.dietByDiet)) : [];
+  const options = Array.isArray(menuItemOptionsByMenuItem.nodes) ?
+    menuItemOptionsByMenuItem.nodes.map(node =>
+      ({defaultValue: node.defaultValue, ...formatOption(node.optionByOption)})
+    ) : [];
   const i18n = Array.isArray(menuItemI18nsByMenuItem.nodes) ?
     menuItemI18nsByMenuItem.nodes.reduce(
       (prev, val) => {
@@ -115,6 +133,7 @@ export const formatMenuItem = (menuItem = {}) => {
       i18n,
       currency,
       diets,
+      options,
       menuItemCategory: formatMenuItemCategory(menuItemCategoryByCategory || {}),
       menuItemType: formatMenuItemType(menuItemTypeByType || {})
     }

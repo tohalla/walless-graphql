@@ -140,18 +140,27 @@ export const updateMenuItemDiets = graphql(
   }
 );
 
-export const updateMenuItemIngredients = graphql(
+export const updateMenuItemOptions = graphql(
   gql`
-  mutation updateMenuItemIngredients($input: UpdateMenuItemIngredientsInput!) {
-    updateMenuItemIngredients(input: $input) {
+  mutation updateMenuItemOptions($input: UpdateMenuItemOptionsInput!) {
+    updateMenuItemOptions(input: $input) {
       clientMutationId
     }
   }
   `, {
     props: ({mutate}) => ({
-      updateMenuItemIngredients: ingredients => mutate({
+      updateMenuItemOptions: (menuItem, menuItemOptions) => mutate({
         variables: {
-          input: {ingredients}
+          input: {
+            menuItem,
+            menuItemOptions: menuItemOptions.map(
+              ({menuItem, id, option, defaultValue}) => ({
+                option: id || option,
+                defaultValue,
+                menuItem
+              })
+            )
+          }
         }
       })
     })
