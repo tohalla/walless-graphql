@@ -16,7 +16,14 @@ export const createOrder = graphql(
   ${orderFragment}
   `, {
     props: ({mutate}) => ({
-      createOrder: (order, items) => mutate({variables: {input: {order, items}}})
+      createOrder: (order, items) => mutate({
+        variables: {
+          input: {
+            order,
+            items
+          }
+        }
+      })
     })
   }
 );

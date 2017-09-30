@@ -15,7 +15,6 @@ export const imageFragment = gql`
     id
     uri
     key
-    thumbnail
   }
 `;
 
