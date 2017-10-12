@@ -44,3 +44,7 @@ typings/
 
 # dotenv environment variables file
 .env
+
+walless-graphql.js
+
+lib

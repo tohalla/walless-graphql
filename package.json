@@ -1,11 +1,62 @@
 {
   "name": "walless-graphql",
+  "version": "0.0.0",
   "private": true,
+  "main": "dist/index.js",
+  "jsnext:main": "dist/index.es.js",
+  "scripts": {
+    "prepare": "node build"
+  },
   "dependencies": {
-    "graphql-tag": "^2.2.2",
-    "humps": "domchristie/humps",
+    "apollo-client": "^1.9.3",
+    "graphql": "^0.11.7",
+    "graphql-tag": "^2.4.2",
+    "humps": "^2.0.1",
     "lodash": "^4.17.4",
-    "react-apollo": "^1.4.2",
-    "socket.io-client": "^2.0.3"
+    "react": "^16.0.0",
+    "react-apollo": "^1.4.16",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-module-resolver": "^2.7.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "del": "^3.0.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "useBuiltIns": "usage",
+          "modules": false,
+          "targets": {
+            "browsers": [
+              "last 2 versions",
+              "safari >= 7"
+            ]
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "transform-object-rest-spread",
+      [
+        "module-resolver",
+        {
+          "root": [
+            "./src"
+          ]
+        }
+      ],
+      "add-module-exports"
+    ]
   }
 }

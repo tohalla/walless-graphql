@@ -1,0 +1,29 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.log",
+        "yarn.lock",
+        ".yarnclean",
+        "walless-graphql.js"
+			],
+			"folder_exclude_patterns":
+			[
+        "dist",
+				"node_modules"
+			],
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"FuzzyFilePath":
+		{
+		},
+		"detect_indentation": false,
+		"tab_size": 2,
+		"translate_tabs_to_spaces": true
+	}
+}
