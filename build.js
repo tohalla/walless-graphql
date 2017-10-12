@@ -2,6 +2,7 @@ const fs = require('fs');
 const del = require('del');
 const rollup = require('rollup');
 const babel = require('rollup-plugin-babel');
+const commonjs = require('rollup-plugin-commonjs');
 
 const pkg = require('./package.json');
 
@@ -13,12 +14,15 @@ promise = promise.then(() => del(['dist/*']));
   promise = promise.then(() => rollup.rollup({
     input: 'src/index.js',
     external: Object.keys(pkg.dependencies),
-    plugins: [babel(Object.assign(pkg.babel, {
-      babelrc: false,
-      exclude: 'node_modules/**',
-      runtimeHelpers: true,
-      presets: pkg.babel.presets.map(x => (x === 'latest' ? ['latest', { env: { modules: false } }] : x))
-    }))],
+    plugins: [
+	    babel(Object.assign(pkg.babel, {
+	      babelrc: false,
+	      exclude: 'node_modules/**',
+	      runtimeHelpers: true,
+	      presets: pkg.babel.presets.map(x => (x === 'latest' ? ['latest', { env: { modules: false } }] : x))
+	    })),
+    	commonjs({include: 'node_modules/**'})
+    ]
   }).then(bundle => bundle.write({
     file: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
     format,
