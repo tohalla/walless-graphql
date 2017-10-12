@@ -30,7 +30,7 @@ const restaurant = {...restaurantQueries, ...restaurantMutations};
 import * as option from 'restaurant/option.queries';
 import * as subscribe from 'subscribe';
 import * as file from 'file.queries';
-import * as util from 'util.queries';
+import * as util from 'util';
 
 export {
 	restaurant,

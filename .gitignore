@@ -47,4 +47,6 @@ typings/
 
 walless-graphql.js
 
-lib
+dist
+
+.tern-port
