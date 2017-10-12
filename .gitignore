@@ -50,3 +50,5 @@ walless-graphql.js
 dist
 
 .tern-port
+
+*.sublime-*

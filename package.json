@@ -2,8 +2,8 @@
   "name": "walless-graphql",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
-  "jsnext:main": "dist/index.es.js",
+  "main": "index.js",
+  "jsnext:main": "index.es.js",
   "scripts": {
     "prepare": "node build"
   },
