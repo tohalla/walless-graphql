@@ -1,33 +1,44 @@
+/* eslint-disable import/no-commonjs */
 const fs = require('fs');
 const del = require('del');
 const rollup = require('rollup');
-const babel = require('rollup-plugin-babel');
+const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 
 const pkg = require('./package.json');
+const babel = require('rollup-plugin-babel')(
+  Object.assign(pkg.babel, {
+    babelrc: false,
+    exclude: 'node_modules/**',
+    runtimeHelpers: true
+  })
+);
 
 let promise = Promise.resolve();
 
 promise = promise.then(() => del(['dist/*']));
 
+const external = Object.assign(
+  Object.keys(pkg.dependencies).slice(),
+  {[Object.keys(pkg.dependencies).indexOf('lodash')]: 'lodash/fp'}
+);
+
 ['es', 'cjs', 'umd'].forEach(format => {
   promise = promise.then(() => rollup.rollup({
     input: 'src/index.js',
-    external: Object.keys(pkg.dependencies),
+    external,
+    onwarn: warning =>
+      warning.code === 'THIS_IS_UNDEFINED' || console.warn(warning.message),
     plugins: [
-	    babel(Object.assign(pkg.babel, {
-	      babelrc: false,
-	      exclude: 'node_modules/**',
-	      runtimeHelpers: true,
-	      presets: pkg.babel.presets.map(x => (x === 'latest' ? ['latest', { env: { modules: false } }] : x))
-	    })),
-    	commonjs({include: 'node_modules/**'})
+      resolve(),
+      commonjs(),
+      babel
     ]
   }).then(bundle => bundle.write({
     file: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
     format,
     sourcemap: false,
-    name: format === 'umd' ? pkg.name : undefined,
+    name: format === 'umd' ? pkg.name : undefined
   })));
 });
 

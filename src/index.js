@@ -33,16 +33,16 @@ import * as file from 'file.queries';
 import * as util from 'util';
 
 export {
-	restaurant,
-	menu,
-	menuItem,
-	order,
-	option,
-	servingLocation,
-	misc,
-	account,
-	subscribe,
-	file,
-	util
+  restaurant,
+  menu,
+  menuItem,
+  order,
+  option,
+  servingLocation,
+  misc,
+  account,
+  subscribe,
+  file,
+  util
 };
 
