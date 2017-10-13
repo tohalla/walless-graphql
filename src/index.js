@@ -28,7 +28,7 @@ import * as restaurantQueries from 'restaurant/restaurant.queries';
 const restaurant = {...restaurantQueries, ...restaurantMutations};
 
 import * as option from 'restaurant/option.queries';
-import * as subscribe from 'subscribe';
+import subscribe from 'subscribe';
 import * as file from 'file.queries';
 import * as util from 'util';
 

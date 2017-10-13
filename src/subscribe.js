@@ -4,7 +4,7 @@ import {pascalize, camelizeKeys} from 'humps';
 import {dataIdFromObject} from 'util';
 
 export default async(
-	{url, wsToken, client, socket},
+	{client, socket},
 	callback
 ) => {
 	socket.on('notification', notification => {
