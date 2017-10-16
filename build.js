@@ -30,13 +30,16 @@ const external = Object.assign(
     onwarn: warning =>
       warning.code === 'THIS_IS_UNDEFINED' || console.warn(warning.message),
     plugins: [
-      resolve(),
+      resolve({jsnext: true, browser: true}),
       commonjs(),
       babel
     ]
   }).then(bundle => bundle.write({
     file: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
     format,
+    globals: {
+      'lodash/fp': '_'
+    },
     sourcemap: false,
     name: format === 'umd' ? pkg.name : undefined
   })));
@@ -51,4 +54,4 @@ promise = promise.then(() => {
   fs.writeFileSync('dist/package.json', JSON.stringify(pkg, null, '  '), 'utf-8');
 });
 
-promise.catch(err => console.error(err.stack)); // eslint-disable-line no-console
+promise.catch(err => console.error(err.stack));

@@ -22,7 +22,18 @@ export const createRestaurant = graphql(
     ${restaurantFragment}
   `, {
     props: ({mutate}) => ({
-      createRestaurant: restaurant => mutate({variables: {input: {restaurant}}})
+      createRestaurant: restaurant => mutate(
+        {variables: {input: {restaurant}}},
+        {
+          update: (store, {data: {createRestaurant: {restaurant}}}) =>
+            store.writeFragment({
+              fragment: restaurantFragment,
+              fragmentName: 'restaurantInfo',
+              id: dataIdFromObject(restaurant),
+              data: restaurant
+            })
+        }
+      )
     })
   }
 );
