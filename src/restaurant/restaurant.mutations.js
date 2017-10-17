@@ -22,18 +22,16 @@ export const createRestaurant = graphql(
     ${restaurantFragment}
   `, {
     props: ({mutate}) => ({
-      createRestaurant: restaurant => mutate(
-        {variables: {input: {restaurant}}},
-        {
-          update: (store, {data: {createRestaurant: {restaurant}}}) =>
-            store.writeFragment({
-              fragment: restaurantFragment,
-              fragmentName: 'restaurantInfo',
-              id: dataIdFromObject(restaurant),
-              data: restaurant
-            })
-        }
-      )
+      createRestaurant: restaurant => mutate({
+        variables: {input: {restaurant}},
+        update: (store, {data: {createRestaurant: {restaurant}}}) =>
+          store.writeFragment({
+            fragment: restaurantFragment,
+            fragmentName: 'restaurantInfo',
+            id: dataIdFromObject(restaurant),
+            data: restaurant
+          })
+      })
     })
   }
 );
@@ -50,7 +48,7 @@ export const createRestaurantI18n = graphql(
     ${restaurantI18nFragment}
   `, {
     props: ({mutate}) => ({
-      createRestaurantI18n: (items) => {
+      createRestaurantI18n: items => {
         (Array.isArray(items) ? items : [items])
           .forEach(restaurantI18n =>
             mutate({
@@ -61,6 +59,7 @@ export const createRestaurantI18n = graphql(
                 store,
                 {data: {createRestaurantI18n: {restaurantI18n}}}
               ) => {
+                if (!store.restaurantById) return;
                 const oldRestaurant = store.readQuery({
                   query: getRestaurantQuery,
                   variables: {id: restaurantI18n.restaurant}
@@ -171,6 +170,7 @@ export const updateRestaurantImages = graphql(
           input: {restaurant, images}
         },
         update: (store, {data: {updateRestaurantImages: {restaurantImages}}}) => {
+          if (!store.restaurantById) return;
           const old = store.readQuery({
             query: getRestaurantQuery,
             variables: {id: restaurant}
