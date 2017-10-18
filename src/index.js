@@ -1,5 +1,3 @@
-process.env.NODE_PATH = __dirname + '/lib';
-
 import * as miscQueries from './misc.queries';
 import * as miscMutations from './misc.mutations';
 const misc = {...miscQueries, ...miscMutations};
