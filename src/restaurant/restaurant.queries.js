@@ -1,8 +1,8 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 
-import {addressFragment, currencyFragment} from 'misc.queries';
-import {imageFragment} from 'file.queries';
+import {addressFragment, currencyFragment} from '../misc.queries';
+import {imageFragment} from '../file.queries';
 
 export const restaurantI18nFragment = gql`
   fragment restaurantI18nInfo on RestaurantI18n {

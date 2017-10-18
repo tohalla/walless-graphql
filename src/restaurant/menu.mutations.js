@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {omit, get} from 'lodash/fp';
 
-import {menuFragment} from 'restaurant/menu.queries';
+import {menuFragment} from './menu.queries';
 
 export const createMenu = graphql(
   gql`

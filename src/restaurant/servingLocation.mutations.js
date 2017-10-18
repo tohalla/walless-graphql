@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {omit} from 'lodash/fp';
 
-import {servingLocationFragment} from 'restaurant/servingLocation.queries';
+import {servingLocationFragment} from './servingLocation.queries';
 
 export const createServingLocation = graphql(
   gql`

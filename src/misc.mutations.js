@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {pick} from 'lodash/fp';
 
-import {addressFragment} from 'misc.queries';
+import {addressFragment} from './misc.queries';
 
 export const createAddress = graphql(
   gql`

@@ -5,7 +5,7 @@ import {get} from 'lodash/fp';
 import {
   accountFragment,
   formatAccount
-} from 'account/account.fragments';
+} from '../account/account.fragments';
 
 export const servingLocationFragment = gql`
   fragment servingLocationInfo on ServingLocation {

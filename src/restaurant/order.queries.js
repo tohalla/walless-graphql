@@ -1,9 +1,9 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-
-import {accountFragment, formatAccount} from 'account/account.fragments';
-import {menuItemFragment, formatMenuItem} from 'restaurant/menuItem.queries';
 import {get} from 'lodash/fp';
+
+import {accountFragment, formatAccount} from '../account/account.fragments';
+import {menuItemFragment, formatMenuItem} from './menuItem.queries';
 
 export const orderItemFragment = gql`
   fragment orderItemInfo on OrderItem {

@@ -5,7 +5,7 @@ import {get} from 'lodash/fp';
 import {
   menuItemFragment,
   formatMenuItem
-} from 'restaurant/menuItem.queries';
+} from './menuItem.queries';
 
 export const menuFragment = gql`
   fragment menuInfo on Menu {

@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {pick} from 'lodash/fp';
 
-import {orderFragment} from 'restaurant/order.queries';
+import {orderFragment} from './order.queries';
 
 export const createOrder = graphql(
   gql`

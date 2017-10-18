@@ -1,6 +1,5 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-
 import {get} from 'lodash/fp';
 
 export const optionFragment = gql`

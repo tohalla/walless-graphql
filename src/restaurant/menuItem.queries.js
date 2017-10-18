@@ -2,16 +2,16 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {get} from 'lodash/fp';
 
-import {imageFragment} from 'file.queries';
+import {imageFragment} from '../file.queries';
 import {
   currencyFragment,
   dietFragment,
   formatDiet
-} from 'misc.queries';
+} from '../misc.queries';
 import {
   optionFragment,
   formatOption
-} from 'restaurant/option.queries';
+} from './option.queries';
 
 export const menuItemTypeFragment = gql`
   fragment menuItemTypeInfo on MenuItemType {

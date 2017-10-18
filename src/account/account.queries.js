@@ -5,11 +5,11 @@ import {get} from 'lodash/fp';
 import {
   restaurantFragment,
   formatRestaurant
-} from 'restaurant/restaurant.queries';
+} from '../restaurant/restaurant.queries';
 import {
   formatAccount,
   accountFragment
-} from 'account/account.fragments';
+} from './account.fragments';
 
 export const getActiveAccount = graphql(
   gql`

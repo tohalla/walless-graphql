@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import {pascalize, camelizeKeys} from 'humps';
 
-import {dataIdFromObject} from 'util';
+import {dataIdFromObject} from './util';
 
 export default async(
   {client, socket},

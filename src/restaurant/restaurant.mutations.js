@@ -6,9 +6,9 @@ import {
   restaurantFragment,
   restaurantI18nFragment,
   getRestaurantQuery
-} from 'restaurant/restaurant.queries';
-import {imageFragment} from 'file.queries';
-import {dataIdFromObject} from 'util';
+} from './restaurant.queries';
+import {imageFragment} from '../file.queries';
+import {dataIdFromObject} from '../util';
 
 export const createRestaurant = graphql(
   gql`

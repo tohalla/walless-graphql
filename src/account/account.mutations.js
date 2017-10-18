@@ -2,7 +2,7 @@ import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
 import {omit} from 'lodash/fp';
 
-import {accountFragment} from 'account/account.fragments';
+import {accountFragment} from './account.fragments';
 
 export const updateAccount = graphql(
   gql`
