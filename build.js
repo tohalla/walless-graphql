@@ -31,8 +31,8 @@ const external = Object.assign(
       warning.code === 'THIS_IS_UNDEFINED' || console.warn(warning.message),
     plugins: [
       resolve({jsnext: true, browser: true}),
-      commonjs(),
-      babel
+      babel,
+      commonjs({sourceMap: false})
     ]
   }).then(bundle => bundle.write({
     file: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
