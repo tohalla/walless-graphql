@@ -1,6 +1,6 @@
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {omit, set, find, get} from 'lodash/fp';
+import {omit, set, find, findIndex, get} from 'lodash/fp';
 
 import {
   restaurantFragment,
@@ -112,11 +112,22 @@ export const updateRestaurantI18n = graphql(
               update: (
                 store,
                 {data: {updateRestaurantI18n: {restaurantI18n}}}
-              ) => store.writeFragment({
-                fragment: restaurantI18nFragment,
-                id: dataIdFromObject(restaurantI18n),
-                data: restaurantI18n
-              })
+              ) => {
+                if (!store.restaurantById) return;
+                const oldRestaurant = store.readQuery({
+                  query: getRestaurantQuery,
+                  variables: {id: restaurantI18n.restaurant}
+                });
+                store.writeQuery({
+                  query: getRestaurantQuery,
+                  data: set([
+                    'restaurantById',
+                    'restaurantI18nsByRestaurant',
+                    'nodes',
+                    findIndex(i => i.language === restaurantI18n.language)(get(['restaurantById', 'restaurantI18nsByRestaurant', 'nodes'])(oldRestaurant))
+                  ])(restaurantI18n)(oldRestaurant)
+                });
+              }
             })
           )
     })

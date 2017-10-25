@@ -14,44 +14,38 @@ const babel = require('rollup-plugin-babel')(
   })
 );
 
-let promise = Promise.resolve();
-
-promise = promise.then(() => del(['dist/*']));
-
 const external = Object.assign(
   Object.keys(pkg.dependencies).slice(),
   {[Object.keys(pkg.dependencies).indexOf('lodash')]: 'lodash/fp'}
 );
 
-['es', 'cjs', 'umd'].forEach(format => {
-  promise = promise.then(() => rollup.rollup({
+Promise.resolve()
+  .then(() => del(['dist/*']))
+  .then(() => rollup.rollup({
     input: 'src/index.js',
     external,
     onwarn: warning =>
       warning.code === 'THIS_IS_UNDEFINED' || console.warn(warning.message),
     plugins: [
       resolve({jsnext: true, browser: true}),
-      commonjs(),
-      babel
+      babel,
+      commonjs()
     ]
-  }).then(bundle => bundle.write({
-    file: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
-    format,
+  })
+  .then(bundle => bundle.write({
+    file: `dist/index.js`,
+    format: 'es',
     globals: {
       'lodash/fp': '_'
     },
-    sourcemap: false,
-    name: format === 'umd' ? pkg.name : undefined
-  })));
-});
-
-promise = promise.then(() => {
-  delete pkg.private;
-  delete pkg.devDependencies;
-  delete pkg.scripts;
-  delete pkg.eslintConfig;
-  delete pkg.babel;
-  fs.writeFileSync('dist/package.json', JSON.stringify(pkg, null, '  '), 'utf-8');
-});
-
-promise.catch(err => console.error(err.stack));
+    sourcemap: false
+  })))
+  .then(() => {
+    delete pkg.private;
+    delete pkg.devDependencies;
+    delete pkg.scripts;
+    delete pkg.eslintConfig;
+    delete pkg.babel;
+    fs.writeFileSync('dist/package.json', JSON.stringify(pkg, null, '  '), 'utf-8');
+  })
+  .catch(err => console.error(err.stack));
