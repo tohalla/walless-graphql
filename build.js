@@ -28,18 +28,27 @@ Promise.resolve()
       warning.code === 'THIS_IS_UNDEFINED' || console.warn(warning.message),
     plugins: [
       resolve({jsnext: true, browser: true}),
-      babel,
-      commonjs()
+      commonjs(),
+      babel
     ]
-  })
-  .then(bundle => bundle.write({
-    file: `dist/index.js`,
-    format: 'es',
-    globals: {
-      'lodash/fp': '_'
-    },
-    sourcemap: false
-  })))
+  }))
+  .then(bundle => Promise.all([
+    bundle.write({
+      file: pkg.main,
+      format: 'cjs',
+      globals: {
+        'lodash/fp': '_'
+      }
+    }),
+    bundle.write({
+      file: pkg.module,
+      format: 'es',
+      globals: {
+        'lodash/fp': '_'
+      },
+      sourcemap: false
+    })
+  ]))
   .then(() => {
     delete pkg.private;
     delete pkg.devDependencies;
