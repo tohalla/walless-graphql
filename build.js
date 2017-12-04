@@ -28,8 +28,8 @@ Promise.resolve()
       warning.code === 'THIS_IS_UNDEFINED' || console.warn(warning.message),
     plugins: [
       resolve({jsnext: true, browser: true}),
-      commonjs(),
-      babel
+      babel,
+      commonjs()
     ]
   }))
   .then(bundle => Promise.all([

@@ -12,6 +12,15 @@ export const currencyFragment = gql`
   }
 `;
 
+export const languageFragment = gql`
+  fragment languageInfo on Language {
+    locale
+    languageShortCode
+    name
+    languageCode
+  }
+`;
+
 export const addressFragment = gql`
   fragment addressInfo on Address {
     id
@@ -95,6 +104,27 @@ export const getCurrencies = graphql(
       return {
         currencies: allCurrencies.nodes,
         getCurrencies
+      };
+    }
+  }
+);
+
+export const getLanguages = graphql(
+  gql`
+    query allLanguages {
+      allLanguages {
+        nodes {
+          ...languageInfo
+        }
+      }
+    }
+    ${languageFragment}
+  `, {
+    props: ({ownProps, data}) => {
+      const {allLanguages = {}, ...getLanguages} = data;
+      return {
+        languages: allLanguages.nodes,
+        getLanguages
       };
     }
   }
