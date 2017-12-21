@@ -58,7 +58,6 @@ export const deleteMenuItem = graphql(
   }
 );
 
-
 export const createMenuItemI18n = graphql(
   gql`
   mutation createMenuItemI18n($input: CreateMenuItemI18nInput!) {

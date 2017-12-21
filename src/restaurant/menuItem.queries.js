@@ -152,15 +152,18 @@ export const formatMenuItemType = (menuItemType = {}) => {
   );
 };
 
-export const getMenuItem = graphql(
-  gql`
-    query menuItemById($id: Int!) {
-      menuItemById(id: $id) {
-        ...menuItemInfo
-      }
+export const getMenuItemQuery = gql`
+  query menuItemById($id: Int!) {
+    menuItemById(id: $id) {
+      ...menuItemInfo
     }
-    ${menuItemFragment}
-  `, {
+  }
+  ${menuItemFragment}
+`;
+
+export const getMenuItem = graphql(
+  getMenuItemQuery,
+  {
     skip: ownProps => typeof ownProps.menuItem !== 'number',
     options: ownProps => ({
       variables: {

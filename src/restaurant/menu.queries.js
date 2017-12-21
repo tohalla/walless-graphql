@@ -52,16 +52,19 @@ export const formatMenu = (menu = {}) => {
   return Object.assign({}, rest, {menuItems, i18n});
 };
 
-export const getMenu = graphql(
-  gql`
-    query menuById($id: Int!) {
-      id
-      menuById(id: $id) {
-        ...menuInfo
-      }
+export const getMenuQuery = gql`
+  query menuById($id: Int!) {
+    id
+    menuById(id: $id) {
+      ...menuInfo
     }
-    ${menuFragment}
-  `, {
+  }
+  ${menuFragment}
+`;
+
+export const getMenu = graphql(
+  getMenuQuery,
+  {
     skip: ownProps => typeof ownProps.menu !== 'number',
     options: ownProps => ({
       variables: {
